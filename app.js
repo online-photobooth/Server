@@ -415,6 +415,11 @@ app.post('/uploadPhoto', async (req, res) => {
 
 app.post('/uploadLastImageTaken', (req, res) => {
   console.log(lastImageTaken);
+  const date = Date.now()
+  uploadPictureToGooglePhotos(req, res, {
+    data: lastImageTaken,
+    name: `${date}_kdg-photobooth.jpg`
+  })
 });
 
 // Take photo with camera
@@ -437,21 +442,22 @@ app.get('/takePicture', (req, res) => {
 });
 
 // Take photo with camera
-// app.get('/takePictureWithoutSaving', (req, res) => {
-//   logger.info(`Taking picture`);
-//   camera.takePicture({
-//     download: true
-//   }, function (er, data) {
-//     logger.info(`Picture taken`);
+app.get('/takePictureWithoutSaving', (req, res) => {
+  logger.info(`Taking picture`);
+  camera.takePicture({
+    download: true
+  }, function (er, data) {
+    logger.info(`Picture taken`);
 
-//     lastImageTaken = data;
+    lastImageTaken = data;
     
-//     res.status(200).send({ 
-//       message: 'Picture taken',
-//       image: data.toString('base64'),
-//     })
-//   });
-// });
+    res.status(200).send({ 
+      message: 'Picture taken',
+      image: data.toString('base64'),
+    })
+
+  });
+});
 
 
 
@@ -461,7 +467,7 @@ server.listen(config.port, () => {
   console.log('Press Ctrl+C to quit.');
 });
 
-const uploadPictureToGooglePhotos = async (res, file) => {
+const uploadPictureToGooglePhotos = async (req, res, file) => {
   const authToken = req.user.token;
   const filename = file.name
   
