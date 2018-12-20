@@ -47,7 +47,7 @@ GPhoto.on('log', function (level, domain, message) {
   console.log(domain, message);
 });
 
-const camera = undefined;
+let camera = undefined;
 
 // List cameras / assign list item to variable to use below options
 GPhoto.list(function (list) {
