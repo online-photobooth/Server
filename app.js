@@ -32,13 +32,14 @@ const fileUpload = require('express-fileupload');
 var fs = require('fs');
 var gphoto2 = require('gphoto2');
 var GPhoto = new gphoto2.GPhoto2();
+const cors = require('cors')
 
 const app = express();
 const fileStore = sessionFileStore(session);
 const server = http.Server(app);
 
 app.use(fileUpload());
-
+app.use(cors())
 // Use the EJS template engine
 app.set('view engine', 'ejs');
 
