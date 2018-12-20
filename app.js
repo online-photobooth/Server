@@ -30,6 +30,9 @@ const uuid = require('uuid');
 const winston = require('winston');
 const fileUpload = require('express-fileupload');
 const axios = require('axios');
+var fs = require('fs');
+var gphoto2 = require('gphoto2');
+var GPhoto = new gphoto2.GPhoto2();
 
 const app = express();
 const fileStore = sessionFileStore(session);
@@ -39,6 +42,69 @@ app.use(fileUpload());
 
 // Use the EJS template engine
 app.set('view engine', 'ejs');
+
+GPhoto.setLogLevel(1);
+GPhoto.on('log', function (level, domain, message) {
+  console.log(domain, message);
+});
+
+// List cameras / assign list item to variable to use below options
+GPhoto.list(function (list) {
+  if (list.length === 0) return;
+  var camera = list[0];
+  console.log('Found', camera.model);
+
+  // get configuration tree
+  camera.getConfig(function (er, settings) {
+    console.log(settings);
+  });
+
+  // // Set configuration values
+  // camera.setConfigValue('capturetarget', 1, function (er) {
+  //   //...
+  // });
+
+  // // Take picture with camera object obtained from list()
+  // camera.takePicture({download: true}, function (er, data) {
+  //   fs.writeFileSync(__dirname + '/picture.jpg', data);
+  // });
+
+  // // Take picture and keep image on camera
+  // camera.takePicture({
+  //   download: true,
+  //   keep: true
+  // }, function (er, data) {
+  //   fs.writeFileSync(__dirname + '/picture.jpg', data);
+  // });
+
+  // // Take picture without downloading immediately
+  // camera.takePicture({download: false}, function (er, path) {
+  //   console.log(path);
+  // });
+
+  // // Take picture and download it to filesystem
+  // camera.takePicture({
+  //   targetPath: '/tmp/foo.XXXXXX'
+  // }, function (er, tmpname) {
+  //   fs.renameSync(tmpname, __dirname + '/picture.jpg');
+  // });
+
+  // // Download a picture from camera
+  // camera.downloadPicture({
+  //   cameraPath: '/store_00020001/DCIM/100CANON/IMG_1231.JPG',
+  //   targetPath: '/tmp/foo.XXXXXX'
+  // }, function (er, tmpname) {
+  //   fs.renameSync(tmpname, __dirname + '/picture.jpg');
+  // });
+
+  // // Get preview picture (from AF Sensor, fails silently if unsupported)
+  // camera.takePicture({
+  //   preview: true,
+  //   targetPath: '/tmp/foo.XXXXXX'
+  // }, function (er, tmpname) {
+  //   fs.renameSync(tmpname, __dirname + '/picture.jpg');
+  // });
+});
 
 
 // Set up a cache for media items that expires after 55 minutes.
@@ -450,6 +516,16 @@ app.post('/uploadPhoto', async (req, res) => {
          
   }
 
+});
+
+// Take photo with camera
+app.get('/takePicture', (req, res) => {
+  camera.takePicture({
+    download: true,
+    keep: true
+  }, function (er, data) {
+    fs.writeFileSync(__dirname + '/picture.jpg', data);
+  });
 });
 
 
