@@ -56,9 +56,9 @@ GPhoto.list(function (list) {
   console.log('Found', camera.model);
 
   // get configuration tree
-  camera.getConfig(function (er, settings) {
-    console.log(settings);
-  });
+  // camera.getConfig(function (er, settings) {
+  //   console.log(settings);
+  // });
 });
 
 
