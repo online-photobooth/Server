@@ -1,0 +1,17 @@
+<% include ../partials/head %>
+
+<% include ../partials/dialogs %>
+<section class="sample-content">
+  <h2>Upload Photo</h2>
+  <form action="./uploadPhoto" method="POST" enctype="multipart/form-data">
+    <!-- <input type="text" name="name" id="name" value="TEST"> -->
+    <input type="file" name="photo" id="photo">
+    <input type="submit" value="SEND">
+  </form>
+</section>
+
+
+
+<% include ../partials/js %>
+
+<% include ../partials/footer %>
