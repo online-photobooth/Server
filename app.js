@@ -471,12 +471,11 @@ server.listen(config.port, () => {
 });
 
 const uploadPictureToGooglePhotos = async (req, res, file) => {
+  logger.info(`Uploading file: ${file}`);
+  
   const authToken = req.user.token;
   const filename = file.name
-  
-
-  logger.info(`Uploading file: ${filename}`);
-  
+    
 
   // Options to request the upload Token
   const options = {
