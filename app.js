@@ -449,6 +449,7 @@ app.get('/takePictureWithoutSaving', (req, res) => {
     res.status(200).send({ 
       message: 'Picture taken',
       image: data.toString('base64'),
+    });
   });
 });
 
