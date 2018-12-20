@@ -446,7 +446,7 @@ server.listen(config.port, () => {
   console.log('Press Ctrl+C to quit.');
 });
 
-function uploadPictureToGooglePhotos(res, file) {
+const uploadPictureToGooglePhotos = async (res, file) => {
   const authToken = req.user.token;
   const filename = file.name
   
