@@ -29,7 +29,6 @@ const sessionFileStore = require('session-file-store');
 const uuid = require('uuid');
 const winston = require('winston');
 const fileUpload = require('express-fileupload');
-const axios = require('axios');
 var fs = require('fs');
 var gphoto2 = require('gphoto2');
 var GPhoto = new gphoto2.GPhoto2();
