@@ -414,11 +414,14 @@ app.post('/uploadPhoto', async (req, res) => {
 });
 
 app.post('/uploadLastImageTaken', (req, res) => {
-  console.log(lastImageTaken);
-  const date = Date.now()
+  const date = Date.now();
+  const filename = `${date}_kdg-photobooth.jpg`;
+  
+  logger.info(`Uploading last image taken ${filename} ${typeOf(lastImageTaken)}`);
+
   uploadPictureToGooglePhotos(req, res, {
     data: lastImageTaken,
-    name: `${date}_kdg-photobooth.jpg`
+    name: filename,
   })
 });
 
