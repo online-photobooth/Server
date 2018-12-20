@@ -47,10 +47,12 @@ GPhoto.on('log', function (level, domain, message) {
   console.log(domain, message);
 });
 
+const camera = undefined;
+
 // List cameras / assign list item to variable to use below options
 GPhoto.list(function (list) {
   if (list.length === 0) return;
-  var camera = list[0];
+  camera = list[0];
   console.log('Found', camera.model);
 
   // get configuration tree
