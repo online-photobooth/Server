@@ -414,20 +414,16 @@ app.post('/uploadPhoto', async (req, res) => {
 
 app.post('/uploadFromBase64', (req, res) => {
   console.log(req);
-  
-  
-  // const userId = req.user.profile.id;
-
 });
 
 // Take photo with camera
 app.get('/takePicture', (req, res) => {
-  logger.info(`Taking picture`);
+  logger.info(`Taking picture and saving to the camera`);
   camera.takePicture({
     download: true,
     keep: true
   }, function (er, data) {
-    logger.info(`Picture taken`);
+    logger.info(`Picture taken and saved to the camera`);
     fs.writeFileSync(__dirname + '/picture.jpg', data);
     
     res.status(200).send({ 
@@ -438,11 +434,16 @@ app.get('/takePicture', (req, res) => {
 });
 
 // Take photo with camera
-app.get('/takePictureAndUpload', (req, res) => {
+app.get('/takePictureWithoutSaving', (req, res) => {
+  logger.info(`Taking picture`);
   camera.takePicture({
     download: true
   }, function (er, data) {
-    console.log(path);
+    logger.info(`Picture taken`);
+    
+    res.status(200).send({ 
+      message: 'Picture taken',
+      image: data.toString('base64'),
   });
 });
 
