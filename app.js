@@ -407,9 +407,46 @@ app.post('/uploadPhoto', async (req, res) => {
     return res.status(400).send('No files were uploaded.');
   }
   const file = req.files.photo;
-  console.log(file);
   
   // const userId = req.user.profile.id;
+
+});
+
+// Take photo with camera
+app.get('/takePicture', (req, res) => {
+  logger.info(`Taking picture`);
+  camera.takePicture({
+    download: true,
+    keep: true
+  }, function (er, data) {
+    logger.info(`Picture taken`);
+    fs.writeFileSync(__dirname + '/picture.jpg', data);
+    
+    res.status(200).send({ 
+      message: 'Picture taken',
+      image: data.toString('base64'),
+    })
+  });
+});
+
+// Take photo with camera
+app.get('/takePictureAndUpload', (req, res) => {
+  camera.takePicture({
+    download: false
+  }, function (er, path) {
+    console.log(path);
+  });
+});
+
+
+
+// Start the server
+server.listen(config.port, () => {
+  console.log(`App listening on http://localhost:${config.port}`);
+  console.log('Press Ctrl+C to quit.');
+});
+
+function uploadPictureToGooglePhotos(res, file) {
   const authToken = req.user.token;
   const filename = file.name
   
@@ -471,43 +508,7 @@ app.post('/uploadPhoto', async (req, res) => {
     console.log(error);
          
   }
-
-});
-
-// Take photo with camera
-app.get('/takePicture', (req, res) => {
-  logger.info(`Taking picture`);
-  camera.takePicture({
-    download: true,
-    keep: true
-  }, function (er, data) {
-    logger.info(`Picture taken`);
-    fs.writeFileSync(__dirname + '/picture.jpg', data);
-    console.log(data);
-    
-    res.status(200).send({ 
-      message: 'Picture taken',
-      data,
-    })
-  });
-});
-
-// Take photo with camera
-app.get('/takePictureAndUpload', (req, res) => {
-  camera.takePicture({
-    download: false
-  }, function (er, path) {
-    console.log(path);
-  });
-});
-
-
-
-// Start the server
-server.listen(config.port, () => {
-  console.log(`App listening on http://localhost:${config.port}`);
-  console.log('Press Ctrl+C to quit.');
-});
+}
 
 // Renders the given page if the user is authenticated.
 // Otherwise, redirects to "/".
