@@ -417,7 +417,7 @@ app.post('/uploadLastImageTaken', (req, res) => {
   const date = Date.now();
   const filename = `${date}_kdg-photobooth.jpg`;
   
-  logger.info(`Uploading last image taken ${filename} ${typeOf(lastImageTaken)}`);
+  logger.info(`Uploading last image taken ${filename} ${lastImageTaken}`);
 
   uploadPictureToGooglePhotos(req, res, {
     data: lastImageTaken,
