@@ -437,21 +437,21 @@ app.get('/takePicture', (req, res) => {
 });
 
 // Take photo with camera
-app.get('/takePictureWithoutSaving', (req, res) => {
-  logger.info(`Taking picture`);
-  camera.takePicture({
-    download: true
-  }, function (er, data) {
-    logger.info(`Picture taken`);
+// app.get('/takePictureWithoutSaving', (req, res) => {
+//   logger.info(`Taking picture`);
+//   camera.takePicture({
+//     download: true
+//   }, function (er, data) {
+//     logger.info(`Picture taken`);
 
-    lastImageTaken = data;
+//     lastImageTaken = data;
     
-    res.status(200).send({ 
-      message: 'Picture taken',
-      image: data.toString('base64'),
-    });
-  });
-});
+//     res.status(200).send({ 
+//       message: 'Picture taken',
+//       image: data.toString('base64'),
+//     })
+//   });
+// });
 
 
 
