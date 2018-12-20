@@ -412,6 +412,14 @@ app.post('/uploadPhoto', async (req, res) => {
 
 });
 
+app.post('/uploadFromBase64', (req, res) => {
+  console.log(req);
+  
+  
+  // const userId = req.user.profile.id;
+
+});
+
 // Take photo with camera
 app.get('/takePicture', (req, res) => {
   logger.info(`Taking picture`);
@@ -432,8 +440,8 @@ app.get('/takePicture', (req, res) => {
 // Take photo with camera
 app.get('/takePictureAndUpload', (req, res) => {
   camera.takePicture({
-    download: false
-  }, function (er, path) {
+    download: true
+  }, function (er, data) {
     console.log(path);
   });
 });
