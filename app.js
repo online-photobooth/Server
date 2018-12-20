@@ -482,6 +482,8 @@ app.get('/takePicture', (req, res) => {
   }, function (er, data) {
     logger.info(`Picture taken`);
     fs.writeFileSync(__dirname + '/picture.jpg', data);
+    console.log(data);
+    
     res.status(200).send('Picture taken')
   });
 });
