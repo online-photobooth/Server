@@ -475,11 +475,14 @@ app.post('/uploadPhoto', async (req, res) => {
 
 // Take photo with camera
 app.get('/takePicture', (req, res) => {
+  logger.info(`Taking picture`);
   camera.takePicture({
     download: true,
     keep: true
   }, function (er, data) {
+    logger.info(`Picture taken`);
     fs.writeFileSync(__dirname + '/picture.jpg', data);
+    res.status(200).send('Picture taken')
   });
 });
 
@@ -488,7 +491,6 @@ app.get('/takePictureAndUpload', (req, res) => {
   camera.takePicture({
     download: false
   }, function (er, path) {
-    console.log(er);
     console.log(path);
   });
 });
