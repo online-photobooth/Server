@@ -49,6 +49,7 @@ GPhoto.on('log', function (level, domain, message) {
 });
 
 let camera = undefined;
+let lastImageTaken = undefined;
 
 // List cameras / assign list item to variable to use below options
 GPhoto.list(function (list) {
@@ -412,8 +413,8 @@ app.post('/uploadPhoto', async (req, res) => {
 
 });
 
-app.post('/uploadFromBase64', (req, res) => {
-  console.log(req);
+app.post('/uploadLastImageTaken', (req, res) => {
+  console.log(lastImageTaken);
 });
 
 // Take photo with camera
@@ -425,6 +426,8 @@ app.get('/takePicture', (req, res) => {
   }, function (er, data) {
     logger.info(`Picture taken and saved to the camera`);
     fs.writeFileSync(__dirname + '/picture.jpg', data);
+
+    lastImageTaken = data;
     
     res.status(200).send({ 
       message: 'Picture taken',
@@ -440,6 +443,8 @@ app.get('/takePictureWithoutSaving', (req, res) => {
     download: true
   }, function (er, data) {
     logger.info(`Picture taken`);
+
+    lastImageTaken = data;
     
     res.status(200).send({ 
       message: 'Picture taken',
