@@ -483,22 +483,22 @@ server.listen(config.port, () => {
 });
 
 const uploadPictureToGooglePhotos = async (req, res, file) => {
-  const filename = file.name;
-  logger.info(`Uploading file ${filename} to Google Photos`);
+  const filename = file.name
+  logger.info(`Uploading file ${filename} to Google Photos`)
 
-  try {
-    const authToken = await file.token;
-  } catch (error) {
-    logger.info('No Auth Token received.');
-    return 'No Auth Token received.'
-  }
+  // try {
+    const authToken = await file.token
+  // } catch (error) {
+  //   logger.info('No Auth Token received.')
+  //   return 'No Auth Token received.'
+  // }
 
-  try {
+  // try {
     const albumId = await file.album
-  } catch (error) {
-    logger.info('No Album id received.');
-    return 'No Album id received.'
-  }
+  // } catch (error) {
+  //   logger.info('No Album id received.')
+  //   return 'No Album id received.'
+  // }
 
   // OPTIONS UPLOAD FILE
   const options = {
