@@ -474,6 +474,8 @@ server.listen(config.port, () => {
 const uploadPictureToGooglePhotos = async (req, res, file) => {
   logger.info(`Uploading file: ${file}`);
   logger.verbose('Printing the request object: %j', req)
+  res.status(500).send(req);      
+
   const authToken = req.user.token;
   const filename = file.name
     
