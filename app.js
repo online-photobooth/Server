@@ -429,6 +429,7 @@ app.post('/uploadLastImageTaken', (req, res) => {
     const resp = uploadPictureToGooglePhotos(req, res, {
       data: lastImageTaken,
       name: filename,
+      token: req.data.token,
     })
     return res.status(200).send(resp);
   } catch (error) {
@@ -482,11 +483,10 @@ server.listen(config.port, () => {
 });
 
 const uploadPictureToGooglePhotos = async (req, res, file) => {
-  logger.info(`Uploading file: ${file}`);
-  return req;      
+  console.log(`Uploading file: ${file}`);
 
-  const authToken = req.user.token;
-  const filename = file.name
+  const authToken = file.token;
+  const filename = file.name;
     
 
   // Options to request the upload Token
