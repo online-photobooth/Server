@@ -399,6 +399,43 @@ app.get('/getQueue', async (req, res) => {
   }
 });
 
+// Take photo with camera
+app.get('/takePicture', (req, res) => {
+  logger.info(`Taking picture and saving to the camera`);
+  camera.takePicture({
+    download: true,
+    keep: true
+  }, function (er, data) {
+    logger.info(`Picture taken and saved to the camera`);
+    fs.writeFileSync(__dirname + '/picture.jpg', data);
+
+    lastImageTaken = data;
+    
+    res.status(200).send({ 
+      message: 'Picture taken',
+      image: 'data:image/png;base64, ' + data.toString('base64'),
+    })
+  });
+});
+
+// Take photo with camera without saving it to the camera
+app.get('/takePictureWithoutSaving', (req, res) => {
+  logger.info(`Taking picture`);
+  camera.takePicture({
+    download: true
+  }, function (er, data) {
+    logger.info(`Picture taken`);
+
+    lastImageTaken = data;
+    
+    res.status(200).send({ 
+      message: 'Picture taken',
+      image: 'data:image/png;base64, ' + data.toString('base64'),
+    })
+
+  });
+});
+
 app.get('/uploadPhoto', (req, res) => {
   renderIfAuthenticated(req, res, 'pages/upload-photo');
 });
@@ -437,45 +474,6 @@ app.post('/uploadLastImageTaken', (req, res) => {
     return res.status(500).send(error);    
   }
 });
-
-// Take photo with camera
-app.get('/takePicture', (req, res) => {
-  logger.info(`Taking picture and saving to the camera`);
-  camera.takePicture({
-    download: true,
-    keep: true
-  }, function (er, data) {
-    logger.info(`Picture taken and saved to the camera`);
-    fs.writeFileSync(__dirname + '/picture.jpg', data);
-
-    lastImageTaken = data;
-    
-    res.status(200).send({ 
-      message: 'Picture taken',
-      image: 'data:image/png;base64, ' + data.toString('base64'),
-    })
-  });
-});
-
-// Take photo with camera
-app.get('/takePictureWithoutSaving', (req, res) => {
-  logger.info(`Taking picture`);
-  camera.takePicture({
-    download: true
-  }, function (er, data) {
-    logger.info(`Picture taken`);
-
-    lastImageTaken = data;
-    
-    res.status(200).send({ 
-      message: 'Picture taken',
-      image: 'data:image/png;base64, ' + data.toString('base64'),
-    })
-
-  });
-});
-
-
 
 // Start the server
 server.listen(config.port, () => {
@@ -534,18 +532,17 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
     try {
       const result2 = await request.post(options2);
       logger.info(`Uploaded Media file`);
-      return result2;    
+      return result2;
     } catch (error) {
       logger.info(`Failed Uploading Media file`);
       console.log(error);
       
-      return error;      
+      return error;
     }
     
   } catch (error) {
     // res.status(500).send(error); 
     console.log(error);
-         
   }
 }
 
