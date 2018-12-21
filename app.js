@@ -412,6 +412,7 @@ app.post('/uploadPhoto', async (req, res) => {
     const resp = uploadPictureToGooglePhotos(req, res, {
       data: file.data,
       name: file.name,
+      token: req.user.token,
     })
     return res.status(200).send(resp);
   } catch (error) {
@@ -489,7 +490,7 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
   const filename = file.name;
     
 
-  // Options to request the upload Token
+  // OPTIONS UPLOAD FILE
   const options = {
     method: 'POST',
     uri: config.apiEndpoint + '/v1/uploads',
@@ -502,19 +503,20 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
     auth: {'bearer': authToken},
   }
 
+  // UPLOAD FILE
   try {
     const upload_token = await request.post(options);
 
-    // Options to upload the file with the upload token
+    // OPTIONS MEDIA ITEM
     const options2 = {
       method: 'POST',
       uri: config.apiEndpoint + '/v1/mediaItems:batchCreate',
       body: {
-        "newMediaItems": [
+        'newMediaItems': [
           {
-            "description": 'Upload Image',
-            "simpleMediaItem": {
-              "uploadToken": upload_token
+            'description': 'Upload Image',
+            'simpleMediaItem': {
+              'uploadToken': upload_token
             }
           }
          ,
@@ -527,15 +529,17 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
       json: true
     }
     logger.info(`Received Token`);
+
+    // CREATE MEDIA ITEM
     try {
       const result2 = await request.post(options2);
       logger.info(`Uploaded Media file`);
-      res.status(200).send(result2);      
+      return result2;    
     } catch (error) {
       logger.info(`Failed Uploading Media file`);
       console.log(error);
       
-      res.status(500).send(error);      
+      return error;      
     }
     
   } catch (error) {
