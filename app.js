@@ -408,10 +408,15 @@ app.post('/uploadPhoto', async (req, res) => {
     return res.status(400).send('No files were uploaded.');
   }
   const file = req.files.photo;
-  uploadPictureToGooglePhotos(req, res, {
-    data: file.data,
-    name: file.name,
-  })
+  try {
+    const resp = uploadPictureToGooglePhotos(req, res, {
+      data: file.data,
+      name: file.name,
+    })
+    return res.status(200).send(resp);
+  } catch (error) {
+    return res.status(500).send(error);    
+  }
 });
 
 app.post('/uploadLastImageTaken', (req, res) => {
@@ -473,7 +478,7 @@ server.listen(config.port, () => {
 
 const uploadPictureToGooglePhotos = async (req, res, file) => {
   logger.info(`Uploading file: ${file}`);
-  res.status(500).send(req);      
+  return req;      
 
   const authToken = req.user.token;
   const filename = file.name
