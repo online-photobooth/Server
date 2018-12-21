@@ -487,14 +487,14 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
   logger.info(`Uploading file ${filename} to Google Photos`)
 
   // try {
-    const authToken = await file.token
+    const authToken = file.token
   // } catch (error) {
   //   logger.info('No Auth Token received.')
   //   return 'No Auth Token received.'
   // }
 
   // try {
-    const albumId = await file.album
+    const albumId = file.album
   // } catch (error) {
   //   logger.info('No Album id received.')
   //   return 'No Album id received.'
