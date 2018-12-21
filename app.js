@@ -425,6 +425,9 @@ app.post('/uploadLastImageTaken', (req, res) => {
   
   logger.info(`Uploading last image taken ${filename}`);
 
+  console.log(req);
+  
+
   try {
     const resp = uploadPictureToGooglePhotos(req, res, {
       data: lastImageTaken,
