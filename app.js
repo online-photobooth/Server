@@ -408,9 +408,10 @@ app.post('/uploadPhoto', async (req, res) => {
     return res.status(400).send('No files were uploaded.');
   }
   const file = req.files.photo;
-  
-  // const userId = req.user.profile.id;
-
+  uploadPictureToGooglePhotos(req, res, {
+    data: file.data,
+    name: file.name,
+  })
 });
 
 app.post('/uploadLastImageTaken', (req, res) => {
@@ -439,7 +440,7 @@ app.get('/takePicture', (req, res) => {
     
     res.status(200).send({ 
       message: 'Picture taken',
-      image: data.toString('base64'),
+      image: 'data:image/png;base64, ' + data.toString('base64'),
     })
   });
 });
@@ -456,7 +457,7 @@ app.get('/takePictureWithoutSaving', (req, res) => {
     
     res.status(200).send({ 
       message: 'Picture taken',
-      image: data.toString('base64'),
+      image: 'data:image/png;base64, ' + data.toString('base64'),
     })
 
   });
