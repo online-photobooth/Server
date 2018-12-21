@@ -468,6 +468,7 @@ app.post('/uploadLastImageTaken', (req, res) => {
       data: lastImageTaken,
       name: filename,
       token: req.body.token,
+      album: req.body.album || '',
     })
     return res.status(200).send(resp);
   } catch (error) {
@@ -482,9 +483,20 @@ server.listen(config.port, () => {
 });
 
 const uploadPictureToGooglePhotos = async (req, res, file) => {
-  console.log(`Uploading file: ${file}`);
+  logger.info(`Uploading file ${filename} to Google Photos`);
 
-  const authToken = file.token;
+  try {
+    const authToken = file.token;
+  } catch (error) {
+    return 'No Auth Token received.'
+  }
+
+  try {
+    const albumId = file.album
+  } catch (error) {
+    return 'No Album id received.'
+  }
+
   const filename = file.name;
     
 
@@ -510,6 +522,7 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
       method: 'POST',
       uri: config.apiEndpoint + '/v1/mediaItems:batchCreate',
       body: {
+        'albumId': albumId,
         'newMediaItems': [
           {
             'description': 'Upload Image',
