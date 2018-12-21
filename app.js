@@ -425,14 +425,11 @@ app.post('/uploadLastImageTaken', (req, res) => {
   
   logger.info(`Uploading last image taken ${filename}`);
 
-  console.log(req);
-  
-
   try {
     const resp = uploadPictureToGooglePhotos(req, res, {
       data: lastImageTaken,
       name: filename,
-      token: req.data.token,
+      token: req.body.token,
     })
     return res.status(200).send(resp);
   } catch (error) {
