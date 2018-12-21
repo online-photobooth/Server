@@ -483,6 +483,7 @@ server.listen(config.port, () => {
 });
 
 const uploadPictureToGooglePhotos = async (req, res, file) => {
+  const filename = file.name;
   logger.info(`Uploading file ${filename} to Google Photos`);
 
   try {
@@ -496,9 +497,6 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
   } catch (error) {
     return 'No Album id received.'
   }
-
-  const filename = file.name;
-    
 
   // OPTIONS UPLOAD FILE
   const options = {
