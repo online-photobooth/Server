@@ -53,21 +53,21 @@ if (process.env.DEBUG) {
         ],
         winstonInstance: logger
   }));
-  require('request-promise').debug = true;
+  require('request-promise').debug = true
 } else {
-  logger.level = 'verbose';
+  logger.level = 'verbose'
 }
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}))
 
 // Take photo with camera without saving it to the camera
 app.get('/takePicture', (req, res) => {
-  logger.info(`Taking picture`);
+  logger.info(`Taking picture`)
   camera.takePicture({
     download: true
   }, function (er, data) {
-    logger.info(`Picture taken`);
+    logger.info(`Picture taken`)
 
     lastImageTaken = data;
     
@@ -75,13 +75,13 @@ app.get('/takePicture', (req, res) => {
       message: 'Picture taken',
       image: 'data:image/png;base64, ' + data.toString('base64'),
     })
-  });
-});
+  })
+})
 
 app.post('/uploadLastImageTaken', (req, res) => {
   const date = Date.now();
   const filename = `${date}_kdg-photobooth.jpg`;
-  
+
   logger.info(`Uploading last image taken ${filename}`);
 
   try {
@@ -91,9 +91,9 @@ app.post('/uploadLastImageTaken', (req, res) => {
       token: req.body.token,
       album: req.body.album || '',
     })
-    return res.status(200).send(resp);
+    return res.status(200).send(resp)
   } catch (error) {
-    return res.status(500).send(error);    
+    return res.status(500).send(error)
   }
 });
 
@@ -125,17 +125,17 @@ app.post('/sendPictureToEmail', (req, res) => {
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-        return console.log(error);
+        return console.log(error)
     }
-    console.log('Message sent: %s', info.messageId);
+    console.log('Message sent: %s', info.messageId)
     // Preview only available when sending through an Ethereal account
   });
 })
 
 // Start the server
 server.listen(config.port, () => {
-  console.log(`App listening on http://localhost:${config.port}`);
-  console.log('Press Ctrl+C to quit.');
+  console.log(`App listening on http://localhost:${config.port}`)
+  console.log('Press Ctrl+C to quit.')
 });
 
 const uploadPictureToGooglePhotos = async (req, res, file) => {
@@ -171,7 +171,7 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
 
   // UPLOAD FILE
   try {
-    const upload_token = await request.post(options);
+    const upload_token = await request.post(options)
 
     // OPTIONS MEDIA ITEM
     const options2 = {
@@ -195,22 +195,23 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
       auth: {'bearer': authToken},
       json: true
     }
-    logger.info(`Received Token and creating Media file`);
+    logger.info(`Received Token and creating Media file`)
 
     // CREATE MEDIA ITEM
     try {
-      const result2 = await request.post(options2);
-      logger.info(`Uploaded Media file`);
-      return result2;
+      const result2 = await request.post(options2)
+      logger.info(`Uploaded Media file`)
+      return result2
     } catch (error) {
-      logger.info(`Failed Uploading Media file`);
-      console.log(error);
+      logger.info(`Failed Uploading Media file`)
+      console.log(error)
       
-      return error;
+      return error
     }
     
   } catch (error) {
     // res.status(500).send(error); 
-    console.log(error);
+    console.log(error)
+    return error
   }
 }
