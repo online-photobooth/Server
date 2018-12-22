@@ -98,7 +98,7 @@ app.post('/uploadLastImageTaken', (req, res) => {
 });
 
 // EMAILS
-app.post('sendPictureToEmail', (req, res) => {
+app.post('/sendPictureToEmail', (req, res) => {
   const fromEmail = 'kdgphotobooth@gmail.com'
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -112,7 +112,7 @@ app.post('sendPictureToEmail', (req, res) => {
   })
 
   transporter.sendMail({
-    from: 'sender@example.com',
+    from: fromEmail,
     to: 'testerman@jordypereira.be',
     subject: 'Message',
     text: 'I hope this message gets through!',
