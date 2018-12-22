@@ -1,7 +1,7 @@
 {
   "name": "gphoto2-photobooth",
   "version": "1.0.0",
-  "description": "Google Photos Library API gphoto2",
+  "description": "Takes a picture with Gphoto2 and sends it to google photos.",
   "private": true,
   "license": "MIT",
   "author": "Jordy Pereira",

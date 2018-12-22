@@ -1,17 +1,18 @@
 'use strict';
-const bodyParser = require('body-parser');
-const config = require('./config.js');
-const express = require('express');
-const expressWinston = require('express-winston');
-const http = require('http');
-const request = require('request-promise');
-const session = require('express-session');
-const winston = require('winston');
-var gphoto2 = require('gphoto2');
+
+const bodyParser = require('body-parser')
+const config = require('./config.js')
+const express = require('express')
+const expressWinston = require('express-winston')
+const http = require('http')
+const request = require('request-promise')
+const session = require('express-session')
+const winston = require('winston')
+const gphoto2 = require('gphoto2')
 const cors = require('cors')
+const nodemailer = require('nodemailer');
 
 const GPhoto = new gphoto2.GPhoto2();
-
 const app = express();
 const server = http.Server(app);
 
@@ -95,6 +96,30 @@ app.post('/uploadLastImageTaken', (req, res) => {
     return res.status(500).send(error);    
   }
 });
+
+// EMAILS
+app.post('sendPictureToEmail', (req, res) => {
+  const fromEmail = 'kdgphotobooth@gmail.com'
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        type: 'OAuth2',
+        user: fromEmail,
+        accessToken: req.body.token,
+    }
+  })
+
+  transporter.sendMail({
+    from: 'sender@example.com',
+    to: 'testerman@jordypereira.be',
+    subject: 'Message',
+    text: 'I hope this message gets through!',
+  });
+
+
+})
 
 // Start the server
 server.listen(config.port, () => {
