@@ -1,29 +1,22 @@
 {
-  "name": "photo-frame-sample",
+  "name": "gphoto2-photobooth",
   "version": "1.0.0",
-  "description": "Google Photos Library API photo frame sample",
+  "description": "Google Photos Library API gphoto2",
   "private": true,
-  "license": "Apache-2.0",
-  "author": "Google LLC",
+  "license": "MIT",
+  "author": "Jordy Pereira",
   "repository": {
     "type": "git",
-    "url": "https://github.com/googlesamples/google-photos.git"
+    "url": "https://github.com/KdG-Photobooth/Server.git"
   },
   "main": "app.js",
   "engines": {
     "node": ">=7.8.0"
   },
   "dependencies": {
-    "@fancyapps/fancybox": "^3.5.2",
-    "async": "^2.6.1",
     "body-parser": "^1.18.3",
-    "cookie-parser": "^1.4.3",
-    "cookie-session": "^2.0.0-beta.3",
     "cors": "^2.8.5",
-    "dotenv": "^6.2.0",
-    "ejs": "^2.6.1",
     "express": "^4.16.3",
-    "express-fileupload": "^1.0.0",
     "express-session": "^1.15.6",
     "express-winston": "^3.0.0",
     "gphoto2": "^0.3.0",
