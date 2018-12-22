@@ -16,8 +16,6 @@ const app = express();
 const server = http.Server(app);
 
 app.use(cors())
-// Use the EJS template engine
-app.set('view engine', 'ejs');
 
 GPhoto.setLogLevel(1);
 GPhoto.on('log', function (level, domain, message) {
@@ -45,36 +43,22 @@ const logger = winston.createLogger({
   ]
 });
 
-// Enable extensive logging if the DEBUG environment variable is set.
 if (process.env.DEBUG) {
-  // Print all winston log levels.
   logger.level = 'silly';
 
-  // Enable express.js debugging. This logs all received requests.
   app.use(expressWinston.logger({
     transports: [
           consoleTransport
         ],
         winstonInstance: logger
   }));
-  // Enable request debugging.
   require('request-promise').debug = true;
 } else {
-  // By default, only print all 'verbose' log level messages or below.
   logger.level = 'verbose';
 }
 
-
-// Set up static routes for hosted libraries.
-app.use(express.static('static'));
-app.use('/js', express.static(__dirname + '/node_modules/jquery/dist/'));
-
-
-// Parse application/json request data.
-app.use(bodyParser.json());
-
-// Parse application/xwww-form-urlencoded request data.
-app.use(bodyParser.urlencoded({extended: true}));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: true}));
 
 // Take photo with camera without saving it to the camera
 app.get('/takePicture', (req, res) => {
@@ -90,7 +74,6 @@ app.get('/takePicture', (req, res) => {
       message: 'Picture taken',
       image: 'data:image/png;base64, ' + data.toString('base64'),
     })
-
   });
 });
 
