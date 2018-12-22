@@ -57,8 +57,8 @@ if (process.env.DEBUG) {
   logger.level = 'verbose';
 }
 
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 // Take photo with camera without saving it to the camera
 app.get('/takePicture', (req, res) => {
