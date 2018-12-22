@@ -99,6 +99,8 @@ app.post('/uploadLastImageTaken', (req, res) => {
 
 // EMAILS
 app.post('/sendPictureToEmail', (req, res) => {
+  console.log(req.body);
+  
   const fromEmail = 'kdgphotobooth@gmail.com'
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
