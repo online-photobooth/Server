@@ -539,7 +539,7 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
       auth: {'bearer': authToken},
       json: true
     }
-    logger.info(`Received Token`);
+    logger.info(`Received Token and creating Media file`);
 
     // CREATE MEDIA ITEM
     try {
