@@ -102,6 +102,8 @@ app.post('/sendPictureToEmail', (req, res) => {
   console.log(req.body);
   
   const fromEmail = 'kdgphotobooth@gmail.com'
+  const toEmail = 'testerman@jordypereira.be'
+
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -113,14 +115,21 @@ app.post('/sendPictureToEmail', (req, res) => {
     }
   })
 
-  transporter.sendMail({
-    from: fromEmail,
-    to: 'testerman@jordypereira.be',
-    subject: 'Message',
-    text: 'I hope this message gets through!',
+  let mailOptions = {
+    from: `"Fred Foo 👻" ${fromEmail}`, // sender address
+    to: toEmail, // list of receivers
+    subject: 'Hello ✔', // Subject line
+    text: 'Hello world?', // plain text body
+    html: '<b>Hello world?</b>' // html body
+  }
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        return console.log(error);
+    }
+    console.log('Message sent: %s', info.messageId);
+    // Preview only available when sending through an Ethereal account
   });
-
-
 })
 
 // Start the server
