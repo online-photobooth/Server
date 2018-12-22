@@ -15,7 +15,6 @@ const GPhoto = new gphoto2.GPhoto2();
 const app = express();
 const server = http.Server(app);
 
-app.use(fileUpload());
 app.use(cors())
 // Use the EJS template engine
 app.set('view engine', 'ejs');
