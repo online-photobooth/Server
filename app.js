@@ -102,7 +102,7 @@ app.post('/sendPictureToEmail', (req, res) => {
   console.log(req.body);
 
   if (req.body.token === '') {
-    return res.send(400, 'No Access Token present.')
+    return res.status(400).send('No Access Token present.')
   }
   
   const fromEmail = 'kdgphotobooth@gmail.com'
@@ -123,7 +123,6 @@ app.post('/sendPictureToEmail', (req, res) => {
     from: `"Karel de Grote Hogeschool Antwerpen" ${fromEmail}`, // sender address
     to: toEmail, // list of receivers
     subject: req.body.title, // Subject line
-    text: 'Hello world?', // plain text body
     html: '<b>Hello world?</b>' // html body
   }
 
