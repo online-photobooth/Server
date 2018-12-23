@@ -1,5 +1,5 @@
 {
-  "name": "gphoto2-photobooth",
+  "name": "photobooth_server",
   "version": "1.0.0",
   "description": "Takes a picture with Gphoto2 and sends it to google photos.",
   "private": true,
