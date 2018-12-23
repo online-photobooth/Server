@@ -136,14 +136,15 @@ app.post('/sendPictureToEmail', (req, res) => {
     `,
     attachments: [{
         filename: 'picture.jpg',
-        path: './',
+        path: './picture.jpg',
         cid: 'unique@nodemailer.com'
     }]
   }
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-        return console.log(error)
+        console.log(error)
+        return res.status(400).send(error)
     }
     console.log('Message sent: %s', info.messageId)
   });
