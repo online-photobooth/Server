@@ -126,7 +126,7 @@ app.post('/sendPictureToEmail', (req, res) => {
     subject: req.body.title, // Subject line
     html: 
     `
-    <div style="max-width: 720px">
+    <div style="max-width: 720px; margin: 20px auto">
       <h1>${req.body.title}</h1>
 
       <h3>Bedankt dat je op ons evenement ${req.body.title} aanwezig was!</h3>
@@ -149,6 +149,7 @@ app.post('/sendPictureToEmail', (req, res) => {
         return res.status(400).send(error)
     }
     console.log('Message sent: %s', info.messageId)
+    return res.status(200).send('Email has been sent!')
   });
 })
 
