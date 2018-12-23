@@ -123,7 +123,12 @@ app.post('/sendPictureToEmail', (req, res) => {
     from: `"Karel de Grote Hogeschool Antwerpen" ${fromEmail}`, // sender address
     to: toEmail, // list of receivers
     subject: req.body.title, // Subject line
-    html: '<b>Hello world?</b>' // html body
+    html: `
+      <h1>${req.body.title}</h1>
+      <h3>Bedankt dat je op ons evenement ${req.body.title} aanwezig was!</h3>
+      <p>Bekijk het hele album op <a href="${req.body.albumLink}" rel="noopener" target="_blank">Google photos</a></p>
+      <p>Hieronder vind je jouw foto:</p>
+    ` // html body
   }
 
   transporter.sendMail(mailOptions, (error, info) => {
