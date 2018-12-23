@@ -100,6 +100,10 @@ app.post('/uploadLastImageTaken', (req, res) => {
 // EMAILS
 app.post('/sendPictureToEmail', (req, res) => {
   console.log(req.body);
+
+  if (req.body.token === '') {
+    return res.send(400, 'No Access Token present.')
+  }
   
   const fromEmail = 'kdgphotobooth@gmail.com'
   const toEmail = 'testerman@jordypereira.be'
@@ -116,9 +120,9 @@ app.post('/sendPictureToEmail', (req, res) => {
   })
 
   let mailOptions = {
-    from: `"Fred Foo 👻" ${fromEmail}`, // sender address
+    from: `"Karel de Grote Hogeschool Antwerpen" ${fromEmail}`, // sender address
     to: toEmail, // list of receivers
-    subject: 'Hello ✔', // Subject line
+    subject: req.body.title, // Subject line
     text: 'Hello world?', // plain text body
     html: '<b>Hello world?</b>' // html body
   }
@@ -128,7 +132,6 @@ app.post('/sendPictureToEmail', (req, res) => {
         return console.log(error)
     }
     console.log('Message sent: %s', info.messageId)
-    // Preview only available when sending through an Ethereal account
   });
 })
 
