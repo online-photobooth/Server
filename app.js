@@ -107,7 +107,7 @@ app.post('/sendPictureToEmail', (req, res) => {
   }
   
   const fromEmail = 'kdgphotobooth@gmail.com'
-  const toEmail = 'testerman@jordypereira.be'
+  const toEmail = req.body.email
 
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
