@@ -11,6 +11,7 @@ const winston = require('winston')
 const gphoto2 = require('gphoto2')
 const cors = require('cors')
 const nodemailer = require('nodemailer');
+var fs = require('fs');
 
 const GPhoto = new gphoto2.GPhoto2();
 const app = express();
@@ -68,7 +69,7 @@ app.get('/takePicture', (req, res) => {
     download: true
   }, function (er, data) {
     logger.info(`Picture taken`)
-
+    fs.writeFileSync(__dirname + '/picture.jpg', data);
     lastImageTaken = data;
     
     res.status(200).send({ 
@@ -123,12 +124,21 @@ app.post('/sendPictureToEmail', (req, res) => {
     from: `"Karel de Grote Hogeschool Antwerpen" ${fromEmail}`, // sender address
     to: toEmail, // list of receivers
     subject: req.body.title, // Subject line
-    html: `
+    html: 
+    `
       <h1>${req.body.title}</h1>
+
       <h3>Bedankt dat je op ons evenement ${req.body.title} aanwezig was!</h3>
+
       <p>Bekijk het hele album op <a href="${req.body.albumLink}" rel="noopener" target="_blank">Google photos</a></p>
       <p>Hieronder vind je jouw foto:</p>
-    ` // html body
+      <img src="cid:unique@nodemailer.com"/>
+    `,
+    attachments: [{
+        filename: 'image.png',
+        path: '/picture.jpg',
+        cid: 'unique@nodemailer.com'
+    }]
   }
 
   transporter.sendMail(mailOptions, (error, info) => {
