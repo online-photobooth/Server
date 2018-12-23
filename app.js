@@ -135,8 +135,8 @@ app.post('/sendPictureToEmail', (req, res) => {
       <img src="cid:unique@nodemailer.com"/>
     `,
     attachments: [{
-        filename: 'image.png',
-        path: '/picture.jpg',
+        filename: 'picture.jpg',
+        path: './',
         cid: 'unique@nodemailer.com'
     }]
   }
