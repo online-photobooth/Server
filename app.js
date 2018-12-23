@@ -126,13 +126,15 @@ app.post('/sendPictureToEmail', (req, res) => {
     subject: req.body.title, // Subject line
     html: 
     `
+    <div style="max-width: 720px">
       <h1>${req.body.title}</h1>
 
       <h3>Bedankt dat je op ons evenement ${req.body.title} aanwezig was!</h3>
 
       <p>Bekijk het hele album op <a href="${req.body.albumLink}" rel="noopener" target="_blank">Google photos</a></p>
       <p>Hieronder vind je jouw foto:</p>
-      <img src="cid:unique@nodemailer.com"/>
+      <img style="max-width: 1080px" src="cid:unique@nodemailer.com"/>
+    </div>
     `,
     attachments: [{
         filename: 'picture.jpg',
