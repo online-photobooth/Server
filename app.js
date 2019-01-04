@@ -78,7 +78,8 @@ app.get('/takePicture', (req, res) => {
         image: 'data:image/png;base64, ' + data.toString('base64'),
       })
     } else {
-      logger.warn(`Something went wrong taking the picture`, er)
+      logger.warn(`Something went wrong taking the picture`)
+      logger.warn(er)
       res.status(500).send({ 
         message: 'Something went wrong taking the picture',
       })
