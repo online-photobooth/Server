@@ -68,6 +68,7 @@ app.get('/takePicture', (req, res) => {
   camera.takePicture({
     download: true
   }, function (er, data) {
+    logger.info(er)
     logger.info(`Picture taken`)
     fs.writeFileSync(__dirname + '/picture.jpg', data);
     lastImageTaken = data;
