@@ -62,21 +62,27 @@ if (process.env.DEBUG) {
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
-// Take photo with camera without saving it to the camera
+// TAKE PICTURE
 app.get('/takePicture', (req, res) => {
   logger.info(`Taking picture`)
   camera.takePicture({
     download: true
   }, function (er, data) {
-    logger.info(er)
-    logger.info(`Picture taken`)
-    fs.writeFileSync(__dirname + '/picture.jpg', data);
-    lastImageTaken = data;
-    
-    res.status(200).send({ 
-      message: 'Picture taken',
-      image: 'data:image/png;base64, ' + data.toString('base64'),
-    })
+    if(!er) {
+      logger.info(`Picture taken`)
+      fs.writeFileSync(__dirname + '/picture.jpg', data);
+      lastImageTaken = data;
+      
+      res.status(200).send({ 
+        message: 'Picture taken',
+        image: 'data:image/png;base64, ' + data.toString('base64'),
+      })
+    } else {
+      logger.info(`Something went wrong taking the picture`)
+      res.status(401).send({ 
+        message: 'Something went wrong taking the picture',
+      })
+    }
   })
 })
 
