@@ -73,16 +73,24 @@ app.get('/takePicture', (req, res) => {
       fs.writeFileSync(__dirname + '/picture.jpg', data);
       lastImageTaken = data;
       
-      res.status(200).send({ 
+      res.status(200).send({
         message: 'Picture taken',
         image: 'data:image/png;base64, ' + data.toString('base64'),
       })
     } else {
-      logger.warn(`Something went wrong taking the picture`)
-      logger.warn(er)
-      res.status(500).send({ 
-        message: 'Something went wrong taking the picture',
-      })
+      if (er == '-110') {
+        const errorMessage = 'Camera lens is obscured. Try again without anything in front of the lens.'
+        logger.warn(errorMessage)
+        res.status(500).send({ 
+          message: errorMessage,
+        })
+      } else {
+        const errorMessage = 'Something went wrong taking the picture.'
+        logger.warn(errorMessage)
+        res.status(500).send({ 
+          message: errorMessage,
+        })
+      }
     }
   })
 })
