@@ -170,35 +170,22 @@ app.post('/sendPictureToEmail', (req, res) => {
         .address span{color:inherit !important; border:none !important;}
         table td{mso-line-height-rule:exactly;}
         @media only screen and (max-width:500px) {
-          /* default style */
           table[class="flexible"]{width:100% !important;}
           table[class="table-center"]{float:none !important; margin:0 auto !important; width:auto !important;}
           *[class="hide"]{display:none !important; width:0 !important; height:0 !important; padding:0 !important; font-size:0 !important; line-height:0 !important;}
-          span[class="db"]{display:block !important;}
-          td[class~="img-flex"] img{width:100% !important; height:auto !important;}
           td[class~="aligncenter"]{text-align:center !important;}
-          tr[class~="table-holder"]{display:table !important; width:100% !important;}
-          th[class~="tcap"]{display:table-caption !important; width:100% !important;}
-          th[class~="thead"]{display:table-header-group !important; width:100% !important;}
-          th[class~="trow"]{display:table-row !important; width:100% !important;}
-          th[class~="tfoot"]{display:table-footer-group !important; width:100% !important;}
           th[class~="flex"]{display:block !important; width:100% !important;}
-          /* custom style */
           td[class~="logo"]{padding:30px 20px !important;}
           td[class~="block-holder"]{padding:20px 0 !important;}
           td[class~="bg-holder"]{background-size:cover !important; padding:30px !important;}
           td[class~="box-01"]{padding:20px 30px !important;}
-          td[class~="box-02"]{height:auto !important; padding:30px 20px !important;}
           td[class~="p-b-30"]{padding-bottom:30px !important;}
-          th[class~="box-03"]{width:49% !important;}
           td[class~="box-holder"]{padding:20px 15px !important;}
           td[class="footer"]{padding:0 10px !important;}
         }
       </style>
     </head>
     <body style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;font-family: 'Arial', sans-serif;" bgcolor="#ffffff">
-      
-      <!-- main -->
       <table style="min-width: 320px;font-family: 'Arial', sans-serif;" width="100%" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
         <tr style="font-family: 'Arial', sans-serif;">
           <td style="font-family: 'Arial', sans-serif;mso-line-height-rule: exactly;">
@@ -221,9 +208,9 @@ app.post('/sendPictureToEmail', (req, res) => {
                       Hieronder is jouw foto te zien!</td>
                     </tr>
                     <tr style="font-family: 'Arial', sans-serif;">
-                      <td class="bg-holder" width="100%" height="auto" bgcolor="#fff" background="cid:unique@nodemailer.com" style="height: auto;width: 100%;background-repeat: no-repeat;border: 1px solid #f7f7f7;font-family: 'Arial', sans-serif;mso-line-height-rule: exactly;">
+                      <td class="bg-holder" width="100%" height="auto" bgcolor="#fff" background="cid:unique@nodemailer.com" style="background-size: cover; background-repeat: no-repeat; background-position: center center; height: auto;width: 100%; background-repeat: no-repeat;border: 1px solid #f7f7f7;font-family: 'Arial', sans-serif;mso-line-height-rule: exactly;">
                         <!--[if gte mso 9]>
-                          <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:100%; height:auto;">
+                          <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="background-size: cover; background-repeat: no-repeat; background-position: center center; width:100%; height:auto;">
                             <v:fill type="tile" src="cid:unique@nodemailer.com" color="#fff" />
                             <v:textbox inset="0,0,0,0">
                               <![endif]-->
@@ -278,7 +265,6 @@ app.post('/sendPictureToEmail', (req, res) => {
                             <th class="flex" width="170" align="left" style="vertical-align: top;padding: 0;font-family: 'Arial', sans-serif;">
                               <table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Arial', sans-serif;">
                                 <tr style="font-family: 'Arial', sans-serif;">
-                                  <!-- Logo -->
                                   <td class="logo" align="left" style="padding: 20px 5px 0;font-family: 'Arial', sans-serif;mso-line-height-rule: exactly;">
                                     <a target="_blank" href="https://www.kdg.be" rel="noopener" style="font-family: 'Arial', sans-serif;outline: none;color: #000;text-decoration: none;"><img src="https://andre.robbe.mtantwerp.eu/kdg-logo.png" border="0" style="vertical-align: top;height: 32px;font-family: 'Arial', sans-serif;border: none !important;" height="32" alt="KdG Logo"></a>
                                   </td>
