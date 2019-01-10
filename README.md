@@ -15,3 +15,8 @@ Your machine needs [gphoto2](https://github.com/lwille/node-gphoto2) installed, 
 git clone https://github.com/KdG-Photobooth/Server.git  
 cd Server  
 npm install
+
+
+### Disable mouse / screen sleep on Pi
+sudo nano /etc/lightdm/lightdm.conf
+xserver-command=X -s 0 dpms -nocursor
