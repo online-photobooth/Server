@@ -130,8 +130,8 @@ app.post('/sendPictureToEmail', (req, res) => {
     port: 587,
     secure: true,
     auth: {
-        user: fromEmail,
-        pass: 'f0857352fa189e263afc8f9835977603-9ce9335e-4f48e278',
+        user: 'apikey',
+        pass: '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',
     }
   })
 
