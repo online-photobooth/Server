@@ -122,17 +122,16 @@ app.post('/sendPictureToEmail', (req, res) => {
     return res.status(400).send('No Access Token present.')
   }
   
-  const fromEmail = 'kdgphotobooth@gmail.com'
+  const fromEmail = 'postmaster@kdgphotobooth.be'
   const toEmail = req.body.email
 
   let transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
+    host: 'smtp.mailgun.org',
+    port: 587,
     secure: true,
     auth: {
-        type: 'OAuth2',
         user: fromEmail,
-        accessToken: req.body.token,
+        pass: 'f0857352fa189e263afc8f9835977603-9ce9335e-4f48e278',
     }
   })
 
