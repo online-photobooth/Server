@@ -126,12 +126,12 @@ app.post('/sendPictureToEmail', (req, res) => {
   const toEmail = req.body.email
 
   let transporter = nodemailer.createTransport({
-    host: 'smtp.mailgun.org',
+    host: 'mail.kdgphotobooth.be',
     port: 587,
     secure: true,
     auth: {
-        user: 'apikey',
-        pass: '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',
+        user: 'postmaster@kdgphotobooth.be',
+        pass: 'dhJTS4BKg',
     }
   })
 
