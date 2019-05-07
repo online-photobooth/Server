@@ -28,7 +28,9 @@ let lastImageTaken = undefined;
 
 // List cameras / assign list item to variable to use below options
 GPhoto.list(function (list) {
-  if (list.length === 0) return;
+  if (list.length === 0) {
+    logger.error('No camera\'s found!')
+  };
   camera = list[0];
   console.log('Found', camera.model);
 });
