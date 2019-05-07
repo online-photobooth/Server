@@ -1,6 +1,5 @@
 'use strict';
 
-const bodyParser = require('body-parser')
 const config = require('./config.js')
 const express = require('express')
 const expressWinston = require('express-winston')
@@ -59,8 +58,8 @@ if (process.env.DEBUG) {
   logger.level = 'verbose'
 }
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 
 // TAKE PICTURE
 app.get('/takePicture', (req, res) => {
