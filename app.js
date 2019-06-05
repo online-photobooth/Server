@@ -35,7 +35,7 @@ GPhoto.list(function (list) {
   if (list.length === 0) {
     logger.error('No camera found!')
 
-    process.exit()
+    // process.exit()
   };
   camera = list[0];
   console.log('Found', camera.model);
@@ -56,36 +56,42 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static('public'));
 
-app.get('/takePicture', (req, res) => {
+app.get('/takePicture', async (req, res) => {
   logger.info(`Taking picture`)
-  camera.takePicture({
-    download: true
-  }, function (er, data) {
-    if(!er) {
-      logger.info(`Picture taken`)
-      fs.writeFileSync(__dirname + '/picture.jpg', data);
-      lastImageTaken = data;
-      
-      res.status(200).send({
-        message: 'Picture taken',
-        image: 'data:image/png;base64, ' + data.toString('base64'),
-      })
-    } else {
-      if (er == '-110') {
-        const errorMessage = 'Camera lens is obscured. Try again without anything in front of the lens.'
-        logger.warn(errorMessage)
-        res.status(500).send({ 
-          message: errorMessage,
-        })
-      } else {
-        const errorMessage = 'Something went wrong taking the picture.'
-        logger.warn(errorMessage)
-        res.status(500).send({ 
-          message: errorMessage,
-        })
-      }
-    }
-  })
+  try {
+    lastImageTaken = await takePicture('/picture.jpg');
+
+    res.status(200).send({
+      message: 'Picture taken',
+      image: 'data:image/png;base64, ' + lastImageTaken.toString('base64'),
+    });
+  } catch (error) {
+    logger.warn(error);
+
+    res.status(500).send({ 
+      message: error,
+    });
+  }
+})
+
+app.get('/takeGif', (req, res) => {
+  logger.info(`Taking Gif`)
+  try {
+    await takePicture('/public/images/image1.jpg');
+    await takePicture('/public/images/image2.jpg');
+    await takePicture('/public/images/image3.jpg');
+    await takePicture('/public/images/image4.jpg');
+
+    res.status(200).send({
+      message: 'Picture taken',
+    });
+  } catch (error) {
+    logger.warn(error);
+
+    res.status(500).send({ 
+      message: error,
+    });
+  }
 })
 
 app.post('/createGif', (req, res) => {
@@ -117,7 +123,7 @@ app.post('/uploadLastImageTaken', (req, res) => {
   logger.info(`Uploading last image taken ${filename}`);
 
   try {
-    const resp = uploadPictureToGooglePhotos(req, res, {
+    const resp = await uploadPictureToGooglePhotos(req, res, {
       data: lastImageTaken,
       name: filename,
       token: req.body.token,
@@ -138,7 +144,7 @@ app.post('/uploadLastGifTaken', async (req, res) => {
   logger.info(`Uploading last GIF taken ${filename}`);
 
   try {
-    const resp = uploadPictureToGooglePhotos({
+    const resp = await uploadPictureToGooglePhotos({
       data: gif,
       name: filename,
       token: req.body.token,
@@ -459,4 +465,28 @@ function addOverlay(res, frame) {
       return res.status(500).send(`Internal Server Error: `)
     })
     .save('public/video.mp4')
+}
+
+function takePicture(filename) {
+  camera.takePicture({
+    download: true
+  }, (er, data) => {
+    if (!er) {
+      fs.writeFileSync(__dirname + filename, data);
+
+      return data;
+    } else {
+      if (er == '-110') {
+        const errorMessage = 'Camera lens is obscured. Try again without anything in front of the lens.'
+        logger.warn(errorMessage)
+
+        throw errorMessage;
+      } else {
+        const errorMessage = 'Something went wrong taking the picture.'
+        logger.warn(errorMessage)
+        
+        throw errorMessage;
+      }
+    }
+  })
 }
