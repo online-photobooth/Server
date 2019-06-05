@@ -3,7 +3,6 @@
 const config = require('./config.js')
 const express = require('express')
 const expressWinston = require('express-winston')
-const http = require('http')
 const request = require('request-promise')
 const winston = require('winston')
 const gphoto2 = require('gphoto2')
@@ -20,7 +19,6 @@ ffmpeg.setFfprobePath(ffprobePath);
 
 const GPhoto = new gphoto2.GPhoto2();
 const app = express();
-const server = http.Server(app);
 
 app.use(cors())
 
@@ -349,7 +347,7 @@ app.post('/sendPictureToEmail', (req, res) => {
 })
 
 // Start the server
-server.listen(config.port, () => {
+app.listen(config.port, () => {
   console.log(`App listening on http://localhost:${config.port}`)
   console.log('Press Ctrl+C to quit.')
 });
