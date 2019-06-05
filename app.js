@@ -5,12 +5,18 @@ const express = require('express')
 const expressWinston = require('express-winston')
 const http = require('http')
 const request = require('request-promise')
-const session = require('express-session')
 const winston = require('winston')
 const gphoto2 = require('gphoto2')
 const cors = require('cors')
 const nodemailer = require('nodemailer');
 var fs = require('fs');
+
+// Setup video encoder
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const ffprobePath = require('@ffprobe-installer/ffprobe').path;
+const ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfprobePath(ffprobePath);
 
 const GPhoto = new gphoto2.GPhoto2();
 const app = express();
@@ -48,24 +54,10 @@ const logger = winston.createLogger({
   ]
 });
 
-if (process.env.DEBUG) {
-  logger.level = 'silly';
-
-  app.use(expressWinston.logger({
-    transports: [
-          consoleTransport
-        ],
-        winstonInstance: logger
-  }));
-  require('request-promise').debug = true
-} else {
-  logger.level = 'verbose'
-}
-
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(express.static('public'));
 
-// TAKE PICTURE
 app.get('/takePicture', (req, res) => {
   logger.info(`Taking picture`)
   camera.takePicture({
@@ -98,6 +90,28 @@ app.get('/takePicture', (req, res) => {
   })
 })
 
+app.post('/createGif', (req, res) => {
+  const frame = req.body.frame;
+
+  ffmpeg()
+    .input('./public/images/image%d.jpg')
+    .inputFPS(1)
+    .size('1200x800')
+    .save('public/temp.mp4')
+    .on('start', function (command) {
+      console.log('ffmpeg process started:', command)
+    })
+    .on('error', function (err, stdout, stderr) {
+      console.error('Error:', err)
+      console.error('ffmpeg stderr:', stderr)
+      return res.status(500).send()
+    })
+    .on('end', function (output) {
+      console.error('Video created in:', output)
+      addOverlay(res, frame)
+    })
+});
+
 app.post('/uploadLastImageTaken', (req, res) => {
   const date = Date.now();
   const filename = `${date}_kdg-photobooth.jpg`;
@@ -107,6 +121,27 @@ app.post('/uploadLastImageTaken', (req, res) => {
   try {
     const resp = uploadPictureToGooglePhotos(req, res, {
       data: lastImageTaken,
+      name: filename,
+      token: req.body.token,
+      album: req.body.album || '',
+    })
+    return res.status(200).send(resp)
+  } catch (error) {
+    return res.status(500).send(error)
+  }
+});
+
+app.post('/uploadLastGifTaken', async (req, res) => {
+  const date = Date.now();
+  const filename = `${date}_kdg-photobooth.mp4`;
+  const gif = await fs.readFileSync('public/video.mp4');
+  console.log("TCL: gif", gif)
+
+  logger.info(`Uploading last GIF taken ${filename}`);
+
+  try {
+    const resp = uploadPictureToGooglePhotos({
+      data: gif,
       name: filename,
       token: req.body.token,
       album: req.body.album || '',
@@ -395,4 +430,35 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
     console.log(error)
     return error
   }
+}
+
+function addOverlay(res, frame) {
+  ffmpeg()
+    .on('start', function (command) {
+      console.log('Adding overlay:', command)
+    })
+    .input('public/temp.mp4')
+    .input(`public/frames/${frame}`)
+    .complexFilter([
+      {
+        "filter": "overlay",
+        "options": {
+          "enable": "between(t,0,4)",
+          "x": "0",
+          "y": "0"
+        },
+        "inputs": "[0:v][1:v]",
+        "outputs": "tmp"
+      }
+    ], 'tmp')
+    .outputOptions(['-pix_fmt yuv420p'])
+    .on('end', (stdout, stderr) => {
+      return res.status(200).send()
+    })
+    .on('error', (err, stdout, stderr) => {
+      console.error('Error:', err)
+      console.error('ffmpeg stderr:', stderr)
+      return res.status(500).send(`Internal Server Error: `)
+    })
+    .save('public/video.mp4')
 }
