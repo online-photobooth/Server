@@ -75,11 +75,13 @@ app.get('/takePicture', async (req, res) => {
 
 app.get('/takeGif', async (req, res) => {
   logger.info(`Taking Gif`)
+  const imageFolder = (i) => path.join(public, images, `image${i}.jpg`);
+
   try {
-    await takePicture('/public/images/image1.jpg');
-    await takePicture('/public/images/image2.jpg');
-    await takePicture('/public/images/image3.jpg');
-    await takePicture('/public/images/image4.jpg');
+    await takePicture(imageFolder(1));
+    await takePicture(imageFolder(2));
+    await takePicture(imageFolder(3));
+    await takePicture(imageFolder(4));
 
     res.status(200).send({
       message: 'Picture taken',
@@ -138,7 +140,7 @@ app.post('/uploadLastGifTaken', async (req, res) => {
   const date = Date.now();
   const filename = `${date}_kdg-photobooth.mp4`;
   try {
-    const gif = await fs.readFileSync(__dirname + 'public/video.mp4');
+    const gif = await fs.readFileSync(path.join(__dirname, 'public', 'video.mp4'));
   } catch (error) {
     logger.warn("gif: error", error)
   }
