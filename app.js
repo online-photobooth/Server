@@ -362,6 +362,7 @@ app.listen(config.port, () => {
 });
 
 const uploadPictureToGooglePhotos = async (req, res, file) => {
+  console.log("TCL: uploadPictureToGooglePhotos -> file", file)
   const filename = file.name
   logger.info(`Uploading file ${filename} to Google Photos`)
 
