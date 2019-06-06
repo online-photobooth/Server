@@ -154,6 +154,7 @@ app.post('/uploadLastGifTaken', async (req, res) => {
     })
     return res.status(200).send(resp)
   } catch (error) {
+    console.log("TCL: error", error)
     return res.status(error.statusCode).send(error.message);
   }
 });
