@@ -84,6 +84,8 @@ app.get('/takeGif', async (req, res) => {
     await takePicture(imageFolder(3));
     await takePicture(imageFolder(4));
 
+    logger.info('Gif Pictures Taken');
+
     res.status(200).send({
       message: 'Picture taken',
     });
@@ -100,20 +102,20 @@ app.post('/createGif', (req, res) => {
   const frame = req.body.frame;
 
   ffmpeg()
-    .input('./public/images/image%d.jpg')
+    .input(path.join(__dirname, public, images, 'image%d.jpg')
     .inputFPS(1)
     .size('1200x800')
     .save('public/temp.mp4')
     .on('start', function (command) {
-      console.log('ffmpeg process started:', command)
+      logger.info('ffmpeg process started:', command)
     })
     .on('error', function (err, stdout, stderr) {
-      console.error('Error:', err)
-      console.error('ffmpeg stderr:', stderr)
+      logger.warn('Error:', err)
+      logger.warn('ffmpeg stderr:', stderr)
       return res.status(500).send()
     })
     .on('end', function (output) {
-      console.error('Video created in:', output)
+      logger.info('Video created')
       addOverlay(res, frame)
     })
 });
