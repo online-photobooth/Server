@@ -139,11 +139,8 @@ app.post('/uploadLastImageTaken', async (req, res) => {
 app.post('/uploadLastGifTaken', async (req, res) => {
   const date = Date.now();
   const filename = `${date}_kdg-photobooth.mp4`;
-  try {
-    const gif = await fs.readFileSync(path.join(__dirname, 'public', 'video.mp4'));
-  } catch (error) {
-    logger.warn("gif: error", error)
-  }
+  const gif = fs.readFileSync(path.join(__dirname, 'public', 'video.mp4'));
+
 
   logger.info(`Uploading last GIF taken ${filename}`);
 
