@@ -127,7 +127,7 @@ app.post('/uploadLastImageTaken', async (req, res) => {
   logger.info(`Uploading last image taken ${filename}`);
 
   try {
-    const resp = await uploadPictureToGooglePhotos(req, res, {
+    const resp = await uploadPictureToGooglePhotos({
       data: lastImageTaken,
       name: filename,
       token: req.body.token,
