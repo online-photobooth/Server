@@ -76,7 +76,7 @@ app.get('/takePicture', async (req, res) => {
 
 app.get('/takeGif', async (req, res) => {
   logger.info(`Taking Gif`)
-  const imageFolder = (i) => path.join('public', 'images', `image${i}.jpg`);
+  const imageFolder = (i) => path.join(__dirname, 'public', 'images', `image${i}.jpg`);
 
   try {
     await takePicture(imageFolder(1));
@@ -464,7 +464,7 @@ function takePicture(filename) {
     download: true
   }, (er, data) => {
     if (!er) {
-      fs.writeFileSync(__dirname + filename, data);
+      fs.writeFileSync(filename, data);
 
       return data;
     } else {
