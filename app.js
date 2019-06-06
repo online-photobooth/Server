@@ -137,7 +137,11 @@ app.post('/uploadLastImageTaken', async (req, res) => {
 app.post('/uploadLastGifTaken', async (req, res) => {
   const date = Date.now();
   const filename = `${date}_kdg-photobooth.mp4`;
-  const gif = await fs.readFileSync('public/video.mp4');
+  try {
+    const gif = await fs.readFileSync('public/video.mp4');
+  } catch (error) {
+    logger.warn("gif: error", error)
+  }
 
   logger.info(`Uploading last GIF taken ${filename}`);
 
@@ -360,8 +364,8 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
   const filename = file.name
   logger.info(`Uploading file ${filename} to Google Photos`)
 
-    const authToken = file.token
-    const albumId = file.album
+  const authToken = file.token
+  const albumId = file.album
 
   // OPTIONS UPLOAD FILE
   const options = {
