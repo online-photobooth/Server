@@ -75,7 +75,7 @@ app.get('/takePicture', async (req, res) => {
 
 app.get('/takeGif', async (req, res) => {
   logger.info(`Taking Gif`)
-  const imageFolder = (i) => path.join(public, images, `image${i}.jpg`);
+  const imageFolder = (i) => path.join('public', 'images', `image${i}.jpg`);
 
   try {
     await takePicture(imageFolder(1));
