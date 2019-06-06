@@ -1,21 +1,24 @@
 'use strict';
 
-const bodyParser = require('body-parser')
 const config = require('./config.js')
 const express = require('express')
-const expressWinston = require('express-winston')
-const http = require('http')
 const request = require('request-promise')
-const session = require('express-session')
 const winston = require('winston')
 const gphoto2 = require('gphoto2')
 const cors = require('cors')
 const nodemailer = require('nodemailer');
+const path = require('path');
 var fs = require('fs');
+
+// Setup video encoder
+// const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+// const ffprobePath = require('@ffprobe-installer/ffprobe').path;
+const ffmpeg = require('fluent-ffmpeg');
+// ffmpeg.setFfmpegPath(ffmpegPath);
+// ffmpeg.setFfprobePath(ffprobePath);
 
 const GPhoto = new gphoto2.GPhoto2();
 const app = express();
-const server = http.Server(app);
 
 app.use(cors())
 
@@ -29,7 +32,11 @@ let lastImageTaken = undefined;
 
 // List cameras / assign list item to variable to use below options
 GPhoto.list(function (list) {
-  if (list.length === 0) return;
+  if (list.length === 0) {
+    logger.error('No camera found!')
+
+    // process.exit()
+  };
   camera = list[0];
   console.log('Found', camera.model);
 });
@@ -45,64 +52,82 @@ const logger = winston.createLogger({
   ]
 });
 
-if (process.env.DEBUG) {
-  logger.level = 'silly';
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+app.use(express.static('public'));
 
-  app.use(expressWinston.logger({
-    transports: [
-          consoleTransport
-        ],
-        winstonInstance: logger
-  }));
-  require('request-promise').debug = true
-} else {
-  logger.level = 'verbose'
-}
-
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
-
-// TAKE PICTURE
-app.get('/takePicture', (req, res) => {
+app.get('/takePicture', async (req, res) => {
   logger.info(`Taking picture`)
-  camera.takePicture({
-    download: true
-  }, function (er, data) {
-    if(!er) {
-      logger.info(`Picture taken`)
-      fs.writeFileSync(__dirname + '/picture.jpg', data);
-      lastImageTaken = data;
-      
-      res.status(200).send({
-        message: 'Picture taken',
-        image: 'data:image/png;base64, ' + data.toString('base64'),
-      })
-    } else {
-      if (er == '-110') {
-        const errorMessage = 'Camera lens is obscured. Try again without anything in front of the lens.'
-        logger.warn(errorMessage)
-        res.status(500).send({ 
-          message: errorMessage,
-        })
-      } else {
-        const errorMessage = 'Something went wrong taking the picture.'
-        logger.warn(errorMessage)
-        res.status(500).send({ 
-          message: errorMessage,
-        })
-      }
-    }
-  })
+  try {
+    lastImageTaken = await takePicture(path.join(__dirname, 'public', 'images', 'picture.jpg'));
+
+    res.status(200).send({
+      message: 'Picture taken',
+      image: 'data:image/png;base64, ' + lastImageTaken.toString('base64'),
+    });
+  } catch (error) {
+    logger.warn(error);
+
+    res.status(500).send({ 
+      message: error,
+    });
+  }
 })
 
-app.post('/uploadLastImageTaken', (req, res) => {
+app.get('/takeGif', async (req, res) => {
+  logger.info(`Taking Gif`)
+  const imageFolder = (i) => path.join(__dirname, 'public', 'images', `image${i}.jpg`);
+
+  try {
+    await takePicture(imageFolder(1));
+    await takePicture(imageFolder(2));
+    await takePicture(imageFolder(3));
+    await takePicture(imageFolder(4));
+
+    logger.info('Gif Pictures Taken');
+
+    res.status(200).send({
+      message: 'Picture taken',
+    });
+  } catch (error) {
+    logger.warn(error);
+
+    res.status(500).send({ 
+      message: error,
+    });
+  }
+});
+
+app.post('/createGif', (req, res) => {
+  const frame = req.body.frame;
+
+  ffmpeg()
+    .input(path.join(__dirname, 'public', 'images', 'image%d.jpg'))
+    .inputFPS(1)
+    .size('1200x800')
+    .save('public/temp.mp4')
+    .on('start', function (command) {
+      logger.info('ffmpeg process started:', command)
+    })
+    .on('error', function (err, stdout, stderr) {
+      logger.warn('Error:', err)
+      logger.warn('ffmpeg stderr:', stderr)
+      return res.status(500).send()
+    })
+    .on('end', function (output) {
+      logger.info('Video created')
+      addOverlay(res, frame)
+    })
+});
+
+app.post('/uploadLastImageTaken', async (req, res) => {
   const date = Date.now();
   const filename = `${date}_kdg-photobooth.jpg`;
 
   logger.info(`Uploading last image taken ${filename}`);
 
   try {
-    const resp = uploadPictureToGooglePhotos(req, res, {
+    const resp = await uploadPictureToGooglePhotos({
       data: lastImageTaken,
       name: filename,
       token: req.body.token,
@@ -110,7 +135,29 @@ app.post('/uploadLastImageTaken', (req, res) => {
     })
     return res.status(200).send(resp)
   } catch (error) {
-    return res.status(500).send(error)
+    return res.status(error.statusCode).send(error.message)
+  }
+});
+
+app.post('/uploadLastGifTaken', async (req, res) => {
+  const date = Date.now();
+  const filename = `${date}_kdg-photobooth.mp4`;
+  const gif = fs.readFileSync(path.join(__dirname, 'public', 'video.mp4'));
+
+
+  logger.info(`Uploading last GIF taken ${filename}`);
+
+  try {
+    const resp = await uploadPictureToGooglePhotos({
+      data: gif,
+      name: filename,
+      token: req.body.token,
+      album: req.body.album || '',
+    })
+    return res.status(200).send(resp)
+  } catch (error) {
+    console.log("TCL: error", error)
+    return res.status(error.statusCode).send(error.message);
   }
 });
 
@@ -311,28 +358,17 @@ app.post('/sendPictureToEmail', (req, res) => {
 })
 
 // Start the server
-server.listen(config.port, () => {
+app.listen(config.port, () => {
   console.log(`App listening on http://localhost:${config.port}`)
   console.log('Press Ctrl+C to quit.')
 });
 
-const uploadPictureToGooglePhotos = async (req, res, file) => {
+const uploadPictureToGooglePhotos = async (file) => {
   const filename = file.name
   logger.info(`Uploading file ${filename} to Google Photos`)
 
-  // try {
-    const authToken = file.token
-  // } catch (error) {
-  //   logger.info('No Auth Token received.')
-  //   return 'No Auth Token received.'
-  // }
-
-  // try {
-    const albumId = file.album
-  // } catch (error) {
-  //   logger.info('No Album id received.')
-  //   return 'No Album id received.'
-  // }
+  const authToken = file.token
+  const albumId = file.album
 
   // OPTIONS UPLOAD FILE
   const options = {
@@ -379,17 +415,74 @@ const uploadPictureToGooglePhotos = async (req, res, file) => {
     try {
       const result2 = await request.post(options2)
       logger.info(`Uploaded Media file`)
+
       return result2
     } catch (error) {
-      logger.info(`Failed Uploading Media file`)
-      console.log(error)
+      logger.warn(`Failed Uploading Media file`, error)
       
-      return error
+      throw error
     }
     
   } catch (error) {
-    // res.status(500).send(error); 
-    console.log(error)
-    return error
+    logger.warn(error.statusCode)
+    throw error;
   }
+}
+
+function addOverlay(res, frame) {
+  ffmpeg()
+    .on('start', function (command) {
+      logger.info('Adding overlay:' + command)
+    })
+    .input('public/temp.mp4')
+    .input(`public/frames/${frame}`)
+    .complexFilter([
+      {
+        "filter": "overlay",
+        "options": {
+          "enable": "between(t,0,4)",
+          "x": "0",
+          "y": "0"
+        },
+        "inputs": "[0:v][1:v]",
+        "outputs": "tmp"
+      }
+    ], 'tmp')
+    .outputOptions(['-pix_fmt yuv420p'])
+    .on('end', (stdout, stderr) => {
+      logger.info('Overlay added')
+      return res.status(200).send()
+    })
+    .on('error', (err, stdout, stderr) => {
+      console.error('Error:', err)
+      console.error('ffmpeg stderr:', stderr)
+      return res.status(500).send(`Internal Server Error: `)
+    })
+    .save('public/video.mp4')
+}
+
+function takePicture(filename) {
+  return new Promise((resolve, reject) => {
+    camera.takePicture({
+      download: true
+    }, (er, data) => {
+      if (!er) {
+        fs.writeFileSync(filename, data);
+  
+        resolve(data);
+      } else {
+        if (er == '-110') {
+          const errorMessage = 'Camera lens is obscured. Try again without anything in front of the lens.'
+          logger.warn(errorMessage)
+  
+          reject(errorMessage);
+        } else {
+          const errorMessage = 'Something went wrong taking the picture.'
+          logger.warn(errorMessage)
+          
+          reject(errorMessage);
+        }
+      }
+    })
+  })
 }

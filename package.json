@@ -5,6 +5,9 @@
   "private": true,
   "license": "MIT",
   "author": "Jordy Pereira",
+  "scripts": {
+    "start": "node app.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/KdG-Photobooth/Server.git"
@@ -14,18 +17,18 @@
     "node": ">=7.8.0"
   },
   "dependencies": {
-    "body-parser": "^1.18.3",
+    "@ffmpeg-installer/ffmpeg": "^1.0.17",
+    "@ffprobe-installer/ffprobe": "^1.0.10",
     "cors": "^2.8.5",
-    "express": "^4.16.3",
-    "express-session": "^1.15.6",
-    "express-winston": "^3.0.0",
+    "express": "^4.16.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "express-session": "^1.16.1",
     "gphoto2": "^0.3.0",
     "node-cache": "^4.2.0",
-    "node-persist": "^2.1.0",
-    "nodemailer": "^4.7.0",
-    "npm": "^6.4.1",
+    "node-persist": "^3.0.4",
+    "nodemailer": "^6.1.1",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2",
-    "winston": "^3.1.0"
+    "request-promise": "^4.2.4",
+    "winston": "^3.2.1"
   }
 }
