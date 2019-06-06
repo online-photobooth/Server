@@ -2,7 +2,6 @@
 
 const config = require('./config.js')
 const express = require('express')
-const expressWinston = require('express-winston')
 const request = require('request-promise')
 const winston = require('winston')
 const gphoto2 = require('gphoto2')
