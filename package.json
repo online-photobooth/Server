@@ -5,6 +5,9 @@
   "private": true,
   "license": "MIT",
   "author": "Jordy Pereira",
+  "scripts": {
+    "start": "node app.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/KdG-Photobooth/Server.git"
