@@ -7,6 +7,7 @@ const winston = require('winston')
 const gphoto2 = require('gphoto2')
 const cors = require('cors')
 const nodemailer = require('nodemailer');
+const path = require('path');
 var fs = require('fs');
 
 // Setup video encoder
