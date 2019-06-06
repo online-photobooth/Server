@@ -116,7 +116,7 @@ app.post('/createGif', (req, res) => {
     })
 });
 
-app.post('/uploadLastImageTaken', (req, res) => {
+app.post('/uploadLastImageTaken', async (req, res) => {
   const date = Date.now();
   const filename = `${date}_kdg-photobooth.jpg`;
 
