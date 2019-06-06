@@ -74,7 +74,7 @@ app.get('/takePicture', async (req, res) => {
   }
 })
 
-app.get('/takeGif', (req, res) => {
+app.get('/takeGif', async (req, res) => {
   logger.info(`Taking Gif`)
   try {
     await takePicture('/public/images/image1.jpg');
