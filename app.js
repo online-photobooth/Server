@@ -102,7 +102,7 @@ app.post('/createGif', (req, res) => {
   const frame = req.body.frame;
 
   ffmpeg()
-    .input(path.join(__dirname, public, images, 'image%d.jpg')
+    .input(path.join(__dirname, 'public', 'images', 'image%d.jpg')
     .inputFPS(1)
     .size('1200x800')
     .save('public/temp.mp4')
