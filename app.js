@@ -59,7 +59,7 @@ app.use(express.static('public'));
 app.get('/takePicture', async (req, res) => {
   logger.info(`Taking picture`)
   try {
-    lastImageTaken = await takePicture('/picture.jpg');
+    lastImageTaken = await takePicture(path.join(__dirname, 'public', 'images', 'picture.jpg'));
 
     res.status(200).send({
       message: 'Picture taken',
@@ -432,7 +432,7 @@ const uploadPictureToGooglePhotos = async (file) => {
 function addOverlay(res, frame) {
   ffmpeg()
     .on('start', function (command) {
-      logger.info('Adding overlay:', command)
+      logger.info('Adding overlay:' + command)
     })
     .input('public/temp.mp4')
     .input(`public/frames/${frame}`)
