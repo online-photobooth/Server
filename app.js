@@ -462,25 +462,27 @@ function addOverlay(res, frame) {
 }
 
 function takePicture(filename) {
-  camera.takePicture({
-    download: true
-  }, (er, data) => {
-    if (!er) {
-      fs.writeFileSync(filename, data);
-
-      return data;
-    } else {
-      if (er == '-110') {
-        const errorMessage = 'Camera lens is obscured. Try again without anything in front of the lens.'
-        logger.warn(errorMessage)
-
-        throw Error(errorMessage);
+  return new Promise((resolve, reject) => {
+    camera.takePicture({
+      download: true
+    }, (er, data) => {
+      if (!er) {
+        fs.writeFileSync(filename, data);
+  
+        resolve(data);
       } else {
-        const errorMessage = 'Something went wrong taking the picture.'
-        logger.warn(errorMessage)
-        
-        throw Error(errorMessage);
+        if (er == '-110') {
+          const errorMessage = 'Camera lens is obscured. Try again without anything in front of the lens.'
+          logger.warn(errorMessage)
+  
+          reject(errorMessage);
+        } else {
+          const errorMessage = 'Something went wrong taking the picture.'
+          logger.warn(errorMessage)
+          
+          reject(errorMessage);
+        }
       }
-    }
+    })
   })
 }
