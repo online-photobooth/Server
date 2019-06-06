@@ -364,7 +364,6 @@ app.listen(config.port, () => {
 });
 
 const uploadPictureToGooglePhotos = async (file) => {
-  console.log("TCL: uploadPictureToGooglePhotos -> file", file)
   const filename = file.name
   logger.info(`Uploading file ${filename} to Google Photos`)
 
@@ -416,16 +415,16 @@ const uploadPictureToGooglePhotos = async (file) => {
     try {
       const result2 = await request.post(options2)
       logger.info(`Uploaded Media file`)
+
       return result2
     } catch (error) {
-      logger.info(`Failed Uploading Media file`)
-      console.log(error)
+      logger.warn(`Failed Uploading Media file`, error)
       
       throw error
     }
     
   } catch (error) {
-    console.log(error.statusCode)
+    logger.warn(error.statusCode)
     throw error;
   }
 }
@@ -433,7 +432,7 @@ const uploadPictureToGooglePhotos = async (file) => {
 function addOverlay(res, frame) {
   ffmpeg()
     .on('start', function (command) {
-      console.log('Adding overlay:', command)
+      logger.info('Adding overlay:', command)
     })
     .input('public/temp.mp4')
     .input(`public/frames/${frame}`)
@@ -451,6 +450,7 @@ function addOverlay(res, frame) {
     ], 'tmp')
     .outputOptions(['-pix_fmt yuv420p'])
     .on('end', (stdout, stderr) => {
+      logger.info('Overlay added')
       return res.status(200).send()
     })
     .on('error', (err, stdout, stderr) => {
