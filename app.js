@@ -130,7 +130,7 @@ app.post('/uploadLastImageTaken', async (req, res) => {
     })
     return res.status(200).send(resp)
   } catch (error) {
-    return res.status(500).send(error)
+    return res.status(error.statusCode).send(error.message)
   }
 });
 
