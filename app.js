@@ -91,7 +91,7 @@ app.get('/takeGif', async (req, res) => {
       message: error,
     });
   }
-})
+});
 
 app.post('/createGif', (req, res) => {
   const frame = req.body.frame;
@@ -466,12 +466,12 @@ function takePicture(filename) {
         const errorMessage = 'Camera lens is obscured. Try again without anything in front of the lens.'
         logger.warn(errorMessage)
 
-        throw errorMessage;
+        throw Error(errorMessage);
       } else {
         const errorMessage = 'Something went wrong taking the picture.'
         logger.warn(errorMessage)
         
-        throw errorMessage;
+        throw Error(errorMessage);
       }
     }
   })
