@@ -56,7 +56,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static('public'));
 
-app.get('/takePicture', async (req, res) => {
+app.post('/takePicture', async (req, res) => {
   logger.info(`Taking picture`);
 
   const frame = req.body.frame;
