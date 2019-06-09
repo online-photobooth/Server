@@ -60,8 +60,11 @@ app.post('/takePicture', async (req, res) => {
   logger.info(`Taking picture`);
 
   const frame = req.body.frame;
+  console.log("TCL: frame", frame)
   const input = path.join(__dirname, 'public', 'images', 'temp.jpg');
+  console.log("TCL: input", input)
   const output = path.join(__dirname, 'public', 'images', 'picture.jpg');
+  console.log("TCL: output", output)
 
   try {
     await takePicture(input);
