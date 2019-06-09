@@ -38,11 +38,11 @@ GPhoto.list(function (list) {
     // process.exit()
   };
   camera = list[0];
-  console.log('Found', camera.model);
-});
 
-camera.getConfig(function (er, settings) {
-  console.log(settings);
+  camera.getConfig(function (er, settings) {
+    console.log(settings);
+  });
+  console.log('Found', camera.model);
 });
 
 const consoleTransport = new winston.transports.Console();
