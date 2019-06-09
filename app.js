@@ -57,13 +57,20 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.static('public'));
 
 app.get('/takePicture', async (req, res) => {
-  logger.info(`Taking picture`)
+  logger.info(`Taking picture`);
+
+  const frame = req.body.frame;
+  const input = path.join(__dirname, 'public', 'images', 'temp.jpg');
+  const output = path.join(__dirname, 'public', 'images', 'picture.jpg');
+
   try {
-    lastImageTaken = await takePicture(path.join(__dirname, 'public', 'images', 'picture.jpg'));
+    await takePicture(input);
+    await addOverlay(input, output, frame)
+    const image = fs.readFileSync(output);
 
     res.status(200).send({
       message: 'Picture taken',
-      image: 'data:image/png;base64, ' + lastImageTaken.toString('base64'),
+      image: 'data:image/png;base64, ' + image.toString('base64'),
     });
   } catch (error) {
     logger.warn(error);
@@ -100,6 +107,8 @@ app.get('/takeGif', async (req, res) => {
 
 app.post('/createGif', (req, res) => {
   const frame = req.body.frame;
+  const input = path.join(__dirname, 'public', 'temp.mp4');
+  const output = path.join(__dirname, 'public', 'video.mp4');
 
   ffmpeg()
     .input(path.join(__dirname, 'public', 'images', 'image%d.jpg'))
@@ -116,7 +125,13 @@ app.post('/createGif', (req, res) => {
     })
     .on('end', function (output) {
       logger.info('Video created')
-      addOverlay(res, frame)
+      try {
+        await addOverlay(input, output, frame);
+
+        return res.status(200).send();
+      } catch (error) {
+        return res.status(500).send(error)
+      }
     })
 });
 
@@ -429,13 +444,16 @@ const uploadPictureToGooglePhotos = async (file) => {
   }
 }
 
-function addOverlay(res, frame) {
-  ffmpeg()
+function addOverlay(res, input, output, frame) {
+  const framePath = path.join(__dirname, 'public', 'frames', frame);
+
+  return new Promise((resolve, reject) => {
+    ffmpeg()
     .on('start', function (command) {
       logger.info('Adding overlay:' + command)
     })
-    .input('public/temp.mp4')
-    .input(`public/frames/${frame}`)
+    .input(input)
+    .input(framePath)
     .complexFilter([
       {
         "filter": "overlay",
@@ -451,14 +469,15 @@ function addOverlay(res, frame) {
     .outputOptions(['-pix_fmt yuv420p'])
     .on('end', (stdout, stderr) => {
       logger.info('Overlay added')
-      return res.status(200).send()
+      resolve();
     })
     .on('error', (err, stdout, stderr) => {
       console.error('Error:', err)
       console.error('ffmpeg stderr:', stderr)
-      return res.status(500).send(`Internal Server Error: `)
+      reject(`Internal Server Error: `);
     })
-    .save('public/video.mp4')
+    .save(output)
+  })
 }
 
 function takePicture(filename) {
