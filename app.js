@@ -453,6 +453,7 @@ function addOverlay(input, output, frame) {
       logger.info('Adding overlay:' + command)
     })
     .input(input)
+    .size('1200x800')
     .input(framePath)
     .complexFilter([
       {
