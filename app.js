@@ -444,11 +444,8 @@ const uploadPictureToGooglePhotos = async (file) => {
   }
 }
 
-function addOverlay(res, input, output, frame) {
-  console.log("TCL: addOverlay -> output", output)
-  console.log("TCL: addOverlay -> input", input)
+function addOverlay(input, output, frame) {
   const framePath = path.join(__dirname, 'public', 'frames', frame);
-  console.log("TCL: addOverlay -> framePath", framePath)
 
   return new Promise((resolve, reject) => {
     ffmpeg()
