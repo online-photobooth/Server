@@ -105,7 +105,7 @@ app.get('/takeGif', async (req, res) => {
   }
 });
 
-app.post('/createGif', (req, res) => {
+app.post('/createGif', async (req, res) => {
   const frame = req.body.frame;
   const input = path.join(__dirname, 'public', 'temp.mp4');
   const output = path.join(__dirname, 'public', 'video.mp4');
