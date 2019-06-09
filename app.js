@@ -38,10 +38,6 @@ GPhoto.list(function (list) {
     // process.exit()
   };
   camera = list[0];
-
-  camera.getConfig(function (er, settings) {
-    console.log(settings);
-  });
   console.log('Found', camera.model);
 });
 
@@ -65,11 +61,13 @@ app.post('/takePicture', async (req, res) => {
 
   const frame = req.body.frame;
   const input = path.join(__dirname, 'public', 'images', 'temp.jpg');
-  const output = path.join(__dirname, 'public', 'images', 'picture.jpg');
+  const output1 = path.join(__dirname, 'public', 'images', 'temp2.jpg');
+  const output2 = path.join(__dirname, 'public', 'images', 'picture.jpg');
 
   try {
     await takePicture(input);
-    await addOverlay(input, output, frame)
+    await resizeImage(input, output1)
+    await addOverlay(output1, output2, frame)
     lastImageTaken = fs.readFileSync(output);
 
     res.status(200).send({
@@ -506,6 +504,24 @@ function takePicture(filename) {
           reject(errorMessage);
         }
       }
+    })
+  })
+}
+
+function resizeImage(input, output) {
+  return new Promise((resolve, reject) => {
+    ffmpeg()
+    .input(input)
+    .size('1200x800')
+    .save(output)
+    .on('start', function (command) {
+      logger.info('Resizing', command)
+    })
+    .on('error', function (output) {
+      reject(output)
+    })
+    .on('end', function (output) {
+      resolve(output)
     })
   })
 }
