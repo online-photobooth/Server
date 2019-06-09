@@ -68,7 +68,7 @@ app.post('/takePicture', async (req, res) => {
     await takePicture(input);
     await resizeImage(input, output1)
     await addOverlay(output1, output2, frame)
-    lastImageTaken = fs.readFileSync(output);
+    lastImageTaken = fs.readFileSync(output2);
 
     res.status(200).send({
       message: 'Picture taken',
