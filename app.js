@@ -68,6 +68,7 @@ app.post('/takePicture', async (req, res) => {
 
   try {
     await takePicture(input);
+    await addOverlay(input, output, frame)
 
     res.status(200).send({
       message: 'Picture taken',
