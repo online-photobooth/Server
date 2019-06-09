@@ -41,6 +41,10 @@ GPhoto.list(function (list) {
   console.log('Found', camera.model);
 });
 
+camera.getConfig(function (er, settings) {
+  console.log(settings);
+});
+
 const consoleTransport = new winston.transports.Console();
 const logger = winston.createLogger({
   format: winston.format.combine(
@@ -66,11 +70,11 @@ app.post('/takePicture', async (req, res) => {
   try {
     await takePicture(input);
     await addOverlay(input, output, frame)
-    const image = fs.readFileSync(output);
+    lastImageTaken = fs.readFileSync(output);
 
     res.status(200).send({
       message: 'Picture taken',
-      image: 'data:image/png;base64, ' + image.toString('base64'),
+      image: 'data:image/png;base64, ' + lastImageTaken.toString('base64'),
     });
   } catch (error) {
     logger.warn(error);
@@ -453,7 +457,6 @@ function addOverlay(input, output, frame) {
       logger.info('Adding overlay:' + command)
     })
     .input(input)
-    .size('1200x800')
     .input(framePath)
     .complexFilter([
       {
