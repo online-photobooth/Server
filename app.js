@@ -191,7 +191,6 @@ app.post('/sendPictureToEmail', (req, res) => {
   const fromEmail = 'postmaster@kdgphotobooth.be';
   const toEmail = req.body.email;
   const imagePath = req.body.format === 'single' ? path.join(__dirname, 'public', 'images', 'picture.jpg') : path.join(__dirname, 'public', 'video.mp4');
-  console.log("TCL: path", imagePath)
 
   let transporter = nodemailer.createTransport({
     host: 'mail.axc.nl',
