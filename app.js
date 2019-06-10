@@ -190,8 +190,8 @@ app.post('/sendPictureToEmail', (req, res) => {
   
   const fromEmail = 'postmaster@kdgphotobooth.be';
   const toEmail = req.body.email;
-  const path = req.body.format === 'single' ? path.join(__dirname, 'public', 'images', 'picture.jpg') : path.join(__dirname, 'public', 'video.mp4');
-  console.log("TCL: path", path)
+  const imagePath = req.body.format === 'single' ? path.join(__dirname, 'public', 'images', 'picture.jpg') : path.join(__dirname, 'public', 'video.mp4');
+  console.log("TCL: path", imagePath)
 
   let transporter = nodemailer.createTransport({
     host: 'mail.axc.nl',
@@ -363,7 +363,7 @@ app.post('/sendPictureToEmail', (req, res) => {
     `,
     attachments: [{
         filename: 'picture.jpg',
-        path: path,
+        path: imagePath,
         cid: 'unique@nodemailer.com'
     }]
   }
