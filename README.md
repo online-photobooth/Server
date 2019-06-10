@@ -8,7 +8,15 @@ Best used with the [Photobooth react front-end](https://github.com/KdG-Photoboot
 
 ## Prerequisites
 This needs to run on a Linux machine, like a raspberry pi with raspbian installed.  
-Your machine needs [gphoto2](https://github.com/lwille/node-gphoto2) installed, as explained in the [Node Gphoto2 repository](https://github.com/lwille/node-gphoto2)
+
+### Gphoto2
+To use a Canon or Nikon camera your machine needs [gphoto2](https://github.com/lwille/node-gphoto2) installed, as explained in the [Node Gphoto2 repository](https://github.com/lwille/node-gphoto2).
+
+### ffmpeg
+To make videos and add overlays, your machine needs ffmpeg and ffmpeg-probe installed.
+
+### node-canvas
+To use the filters you need [node-canvas](https://github.com/Automattic/node-canvas/wiki/_pages).
 
 ## Installation
 
