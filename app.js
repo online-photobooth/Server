@@ -9,6 +9,8 @@ const cors = require('cors')
 const nodemailer = require('nodemailer');
 const path = require('path');
 var fs = require('fs');
+const filterous = require('filterous');
+
 
 // Setup video encoder
 // const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
@@ -60,14 +62,19 @@ app.post('/takePicture', async (req, res) => {
   logger.info(`Taking picture`);
 
   const frame = req.body.frame;
+  const filter = req.body.filter;
+  console.log("TCL: filter", filter)
   const input = path.join(__dirname, 'public', 'images', 'temp.jpg');
   const output1 = path.join(__dirname, 'public', 'images', 'temp2.jpg');
   const output2 = path.join(__dirname, 'public', 'images', 'picture.jpg');
 
   try {
-    await takePicture(input);
-    await resizeImage(input, output1)
-    await addOverlay(output1, output2, frame)
+    const picture = await takePicture(input);
+    await filterous.importImage(buffer)
+    .applyInstaFilter(filter)
+    .save(input);
+    await resizeImage(input, output1);
+    await addOverlay(output1, output2, frame);
     lastImageTaken = fs.readFileSync(output2);
 
     res.status(200).send({
