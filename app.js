@@ -111,6 +111,7 @@ app.post('/createGif', async (req, res) => {
   const frame = req.body.frame;
   const input = path.join(__dirname, 'public', 'temp.mp4');
   const output = path.join(__dirname, 'public', 'video.mp4');
+  console.log("TCL: output", output)
 
   ffmpeg()
     .input(path.join(__dirname, 'public', 'images', 'image%d.jpg'))
