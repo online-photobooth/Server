@@ -460,6 +460,7 @@ const uploadPictureToGooglePhotos = async (file) => {
 }
 
 function addOverlay(input, output, frame) {
+  console.log("TCL: addOverlay -> output", output)
   const framePath = path.join(__dirname, 'public', 'frames', frame);
 
   return new Promise((resolve, reject) => {
