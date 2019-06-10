@@ -7,3 +7,5 @@ persist-albumcache/
 .DS_STORE
 .env
 .vscode
+public/images/*
+public/videos/*
