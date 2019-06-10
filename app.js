@@ -126,7 +126,7 @@ app.post('/createGif', async (req, res) => {
       logger.warn('ffmpeg stderr:', stderr)
       return res.status(500).send()
     })
-    .on('end', async function (output) {
+    .on('end', async function() {
       logger.info('Video created')
       try {
         await addOverlay(input, output, frame);
