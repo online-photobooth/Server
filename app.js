@@ -70,7 +70,7 @@ app.post('/takePicture', async (req, res) => {
 
   try {
     const picture = await takePicture(input);
-    await filterous.importImage(buffer)
+    await filterous.importImage(picture)
     .applyInstaFilter(filter)
     .save(input);
     await resizeImage(input, output1);
