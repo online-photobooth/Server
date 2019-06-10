@@ -132,6 +132,7 @@ app.post('/createGif', async (req, res) => {
 
         return res.status(200).send();
       } catch (error) {
+        logger.warn(error)
         return res.status(500).send(error)
       }
     })
