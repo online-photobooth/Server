@@ -117,7 +117,7 @@ app.post('/createGif', async (req, res) => {
     .input(path.join(__dirname, 'public', 'images', 'image%d.jpg'))
     .inputFPS(1)
     .size('1200x800')
-    .save('public/temp.mp4')
+    .save(input)
     .on('start', function (command) {
       logger.info('ffmpeg process started:', command)
     })
