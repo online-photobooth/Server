@@ -63,7 +63,6 @@ app.post('/takePicture', async (req, res) => {
 
   const frame = req.body.frame;
   const filter = req.body.filter;
-  console.log("TCL: filter", filter)
   const input = path.join(__dirname, 'public', 'images', 'temp.jpg');
   const output1 = path.join(__dirname, 'public', 'images', 'temp2.jpg');
   const output2 = path.join(__dirname, 'public', 'images', 'picture.jpg');
@@ -75,11 +74,9 @@ app.post('/takePicture', async (req, res) => {
     .save(input);
     await resizeImage(input, output1);
     await addOverlay(output1, output2, frame);
-    lastImageTaken = fs.readFileSync(output2);
 
     res.status(200).send({
       message: 'Picture taken',
-      image: 'data:image/png;base64, ' + lastImageTaken.toString('base64'),
     });
   } catch (error) {
     logger.warn(error);
@@ -181,7 +178,7 @@ app.post('/uploadLastGifTaken', async (req, res) => {
     })
     return res.status(200).send(resp)
   } catch (error) {
-    console.log("TCL: error", error)
+    logger.warn(error);
     return res.status(error.statusCode).send(error.message);
   }
 });
@@ -466,7 +463,6 @@ const uploadPictureToGooglePhotos = async (file) => {
 }
 
 function addOverlay(input, output, frame) {
-  console.log("TCL: addOverlay -> output", output)
   const framePath = path.join(__dirname, 'public', 'frames', frame);
 
   return new Promise((resolve, reject) => {
