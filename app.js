@@ -89,28 +89,28 @@ app.post('/takePicture', async (req, res) => {
 })
 
 app.post('/takeGif', async (req, res) => {
-  const filter = req.body.filter;
+  const filter = req.body.filter === 'normal' ? false : req.body.filter;
   logger.info(`Taking Gif`)
   const imageFolder = (i) => path.join(__dirname, 'public', 'images', `image${i}.jpg`);
 
   try {
     const picture1 = await takePicture(imageFolder(1));
-    await filterous.importImage(picture1)
+    filter && filterous.importImage(picture1)
     .applyInstaFilter(filter)
     .save(imageFolder(1));
 
     const picture2 = await takePicture(imageFolder(2));
-    await filterous.importImage(picture2)
+    filter && filterous.importImage(picture2)
     .applyInstaFilter(filter)
     .save(imageFolder(2));
 
     const picture3 = await takePicture(imageFolder(3));
-    await filterous.importImage(picture3)
+    filter && filterous.importImage(picture3)
     .applyInstaFilter(filter)
     .save(imageFolder(3));
 
     const picture4 = await takePicture(imageFolder(4));
-    await filterous.importImage(picture4)
+    filter && filterous.importImage(picture4)
     .applyInstaFilter(filter)
     .save(imageFolder(4));
 
