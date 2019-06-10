@@ -95,25 +95,26 @@ app.post('/takeGif', async (req, res) => {
 
   try {
     const picture1 = await takePicture(imageFolder(1));
-    filter && filterous.importImage(picture1)
-    .applyInstaFilter(filter)
-    .save(imageFolder(1));
-
     const picture2 = await takePicture(imageFolder(2));
-    filter && filterous.importImage(picture2)
-    .applyInstaFilter(filter)
-    .save(imageFolder(2));
-
     const picture3 = await takePicture(imageFolder(3));
-    filter && filterous.importImage(picture3)
-    .applyInstaFilter(filter)
-    .save(imageFolder(3));
-
     const picture4 = await takePicture(imageFolder(4));
-    filter && filterous.importImage(picture4)
-    .applyInstaFilter(filter)
-    .save(imageFolder(4));
 
+    if(filter) {
+      await Promise.all(
+        filterous.importImage(picture1)
+        .applyInstaFilter(filter)
+        .save(imageFolder(1));
+        filterous.importImage(picture2)
+        .applyInstaFilter(filter)
+        .save(imageFolder(2));
+        filterous.importImage(picture3)
+        .applyInstaFilter(filter)
+        .save(imageFolder(3));
+        filterous.importImage(picture4)
+        .applyInstaFilter(filter)
+        .save(imageFolder(4));
+      )
+    }
     logger.info('Gif Pictures Taken');
 
     res.status(200).send({
