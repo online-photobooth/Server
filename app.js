@@ -11,6 +11,8 @@ const path = require('path');
 var fs = require('fs');
 const filterous = require('filterous');
 
+const imagePath = path.join(__dirname, 'public', 'images', 'picture.jpg');
+const videoPath = path.join(__dirname, 'public', 'videos', 'video.mp4');
 
 // Setup video encoder
 // const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
@@ -65,7 +67,6 @@ app.post('/takePicture', async (req, res) => {
   const filter = req.body.filter;
   const input = path.join(__dirname, 'public', 'images', 'temp.jpg');
   const output1 = path.join(__dirname, 'public', 'images', 'temp2.jpg');
-  const output2 = path.join(__dirname, 'public', 'images', 'picture.jpg');
 
   try {
     const picture = await takePicture(input);
@@ -73,7 +74,7 @@ app.post('/takePicture', async (req, res) => {
     .applyInstaFilter(filter)
     .save(input);
     await resizeImage(input, output1);
-    await addOverlay(output1, output2, frame);
+    await addOverlay(output1, imagePath, frame);
 
     res.status(200).send({
       message: 'Picture taken',
@@ -87,15 +88,31 @@ app.post('/takePicture', async (req, res) => {
   }
 })
 
-app.get('/takeGif', async (req, res) => {
+app.post('/takeGif', async (req, res) => {
+  const filter = req.body.filter;
   logger.info(`Taking Gif`)
   const imageFolder = (i) => path.join(__dirname, 'public', 'images', `image${i}.jpg`);
 
   try {
-    await takePicture(imageFolder(1));
-    await takePicture(imageFolder(2));
-    await takePicture(imageFolder(3));
-    await takePicture(imageFolder(4));
+    const picture1 = await takePicture(imageFolder(1));
+    await filterous.importImage(picture1)
+    .applyInstaFilter(filter)
+    .save(imageFolder(1));
+
+    const picture2 = await takePicture(imageFolder(2));
+    await filterous.importImage(picture2)
+    .applyInstaFilter(filter)
+    .save(imageFolder(2));
+
+    const picture3 = await takePicture(imageFolder(3));
+    await filterous.importImage(picture3)
+    .applyInstaFilter(filter)
+    .save(imageFolder(3));
+
+    const picture4 = await takePicture(imageFolder(4));
+    await filterous.importImage(picture4)
+    .applyInstaFilter(filter)
+    .save(imageFolder(4));
 
     logger.info('Gif Pictures Taken');
 
@@ -114,7 +131,6 @@ app.get('/takeGif', async (req, res) => {
 app.post('/createGif', async (req, res) => {
   const frame = req.body.frame;
   const input = path.join(__dirname, 'public', 'temp.mp4');
-  const output = path.join(__dirname, 'public', 'video.mp4');
 
   ffmpeg()
     .input(path.join(__dirname, 'public', 'images', 'image%d.jpg'))
@@ -132,7 +148,7 @@ app.post('/createGif', async (req, res) => {
     .on('end', async function() {
       logger.info('Video created')
       try {
-        await addOverlay(input, output, frame);
+        await addOverlay(input, videoPath, frame);
 
         return res.status(200).send();
       } catch (error) {
@@ -145,12 +161,13 @@ app.post('/createGif', async (req, res) => {
 app.post('/uploadLastImageTaken', async (req, res) => {
   const date = Date.now();
   const filename = `${date}_kdg-photobooth.jpg`;
+  const image = fs.readFileSync(imagePath);
 
   logger.info(`Uploading last image taken ${filename}`);
 
   try {
     const resp = await uploadPictureToGooglePhotos({
-      data: lastImageTaken,
+      data: image,
       name: filename,
       token: req.body.token,
       album: req.body.album || '',
@@ -164,7 +181,7 @@ app.post('/uploadLastImageTaken', async (req, res) => {
 app.post('/uploadLastGifTaken', async (req, res) => {
   const date = Date.now();
   const filename = `${date}_kdg-photobooth.mp4`;
-  const gif = fs.readFileSync(path.join(__dirname, 'public', 'video.mp4'));
+  const gif = fs.readFileSync(videoPath);
 
 
   logger.info(`Uploading last GIF taken ${filename}`);
@@ -195,7 +212,7 @@ app.post('/sendPictureToEmail', (req, res) => {
   
   const fromEmail = 'postmaster@kdgphotobooth.be';
   const toEmail = req.body.email;
-  const imagePath = req.body.format === 'single' ? path.join(__dirname, 'public', 'images', 'picture.jpg') : path.join(__dirname, 'public', 'video.mp4');
+  const imagePath = req.body.format === 'single' ? imagePath : videoPath;
 
   let transporter = nodemailer.createTransport({
     host: 'mail.axc.nl',
@@ -397,11 +414,11 @@ app.listen(config.port, () => {
 });
 
 const uploadPictureToGooglePhotos = async (file) => {
-  const filename = file.name
-  logger.info(`Uploading file ${filename} to Google Photos`)
+  const filename = file.name;
+  logger.info(`Uploading file ${filename} to Google Photos`);
 
-  const authToken = file.token
-  const albumId = file.album
+  const authToken = file.token;
+  const albumId = file.album;
 
   // OPTIONS UPLOAD FILE
   const options = {
@@ -446,14 +463,14 @@ const uploadPictureToGooglePhotos = async (file) => {
 
     // CREATE MEDIA ITEM
     try {
-      const result2 = await request.post(options2)
-      logger.info(`Uploaded Media file`)
+      const result2 = await request.post(options2);
+      logger.info(`Uploaded Media file`);
 
       return result2
     } catch (error) {
-      logger.warn(`Failed Uploading Media file`, error)
+      logger.warn(`Failed Uploading Media file`, error);
       
-      throw error
+      throw error;
     }
     
   } catch (error) {
