@@ -205,7 +205,7 @@ app.post('/sendPictureToEmail', (req, res) => {
   let mailOptions = {
     from: `"Karel de Grote Hogeschool Antwerpen" ${fromEmail}`, // sender address
     to: toEmail, // list of receivers
-    subject: req.body.title, // Subject line
+    subject: 'Say cheese! 📷 Deel je foto met #kdgfeest', // Subject line
     html: 
     `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -267,11 +267,19 @@ app.post('/sendPictureToEmail', (req, res) => {
                   <table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Arial', sans-serif;">
                     <tr style="font-family: 'Arial', sans-serif;">
                       <td style="line-height: 20px;font-size: 18px;mso-line-height-rule: at-least;font-family: 'Arial', sans-serif;">
-                      Leuk dat je op KdG ${req.body.title} aanwezig was!</td>
+                      Wat een avond! Hopelijk heb je ervan genoten.</td>
                     </tr>
                     <tr style="font-family: 'Arial', sans-serif;">
                       <td style="line-height: 20px;font-size: 18px;mso-line-height-rule: at-least;padding: 0 0 10px;font-family: 'Arial', sans-serif;">
-                      Hieronder is jouw foto te zien!</td>
+                      Deel je foto of GIF via onderstaande knoppen met #kdgfeest.</td>
+                    </tr>
+                    <tr style="font-family: 'Arial', sans-serif;">
+                      <td style="line-height: 20px;font-size: 18px;mso-line-height-rule: at-least;padding: 0 0 10px;font-family: 'Arial', sans-serif;">
+                      Nog veel succes & geniet van de zomer!</td>
+                    </tr>
+                    <tr style="font-family: 'Arial', sans-serif;">
+                      <td style="line-height: 20px;font-size: 18px;mso-line-height-rule: at-least;padding: 0 0 10px;font-family: 'Arial', sans-serif;">
+                      Het proclamatie-team</td>
                     </tr>
                     <tr style="font-family: 'Arial', sans-serif;">
                       <td class="bg-holder" width="100%" height="auto" bgcolor="#fff" background="cid:unique@nodemailer.com" style="background-size: cover; background-repeat: no-repeat; background-position: center center; height: auto;width: 100%; background-repeat: no-repeat;border: 1px solid #f7f7f7;font-family: 'Arial', sans-serif;mso-line-height-rule: exactly;">
