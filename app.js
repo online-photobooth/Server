@@ -180,14 +180,17 @@ app.post('/uploadLastGifTaken', async (req, res) => {
 
 // EMAILS
 app.post('/sendPictureToEmail', (req, res) => {
+  logger.info('Sending mail.');
+
   console.log(req.body);
 
   if (req.body.token === '') {
-    return res.status(400).send('No Access Token present.')
+    return res.status(403).send('No Access Token present.');
   }
   
-  const fromEmail = 'postmaster@kdgphotobooth.be'
-  const toEmail = req.body.email
+  const fromEmail = 'postmaster@kdgphotobooth.be';
+  const toEmail = req.body.email;
+  const path = req.body.format === 'single' ? path.join(__dirname, 'public', 'images', 'picture.jpg') : path.join(__dirname, 'public', 'video.mp4');
 
   let transporter = nodemailer.createTransport({
     host: 'mail.axc.nl',
@@ -359,7 +362,7 @@ app.post('/sendPictureToEmail', (req, res) => {
     `,
     attachments: [{
         filename: 'picture.jpg',
-        path: './picture.jpg',
+        path: path,
         cid: 'unique@nodemailer.com'
     }]
   }
