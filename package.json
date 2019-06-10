@@ -19,10 +19,12 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.17",
     "@ffprobe-installer/ffprobe": "^1.0.10",
+    "canvas": "^2.4.1",
     "cors": "^2.8.5",
     "express": "^4.16.4",
-    "fluent-ffmpeg": "^2.1.2",
     "express-session": "^1.16.1",
+    "filterous": "^2.0.2-beta",
+    "fluent-ffmpeg": "^2.1.2",
     "gphoto2": "^0.3.0",
     "node-cache": "^4.2.0",
     "node-persist": "^3.0.4",
