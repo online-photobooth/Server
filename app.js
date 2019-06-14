@@ -215,7 +215,7 @@ app.post('/sendPictureToEmail', (req, res) => {
   
   const fromEmail = 'postmaster@kdgphotobooth.be';
   const toEmail = req.body.email;
-  const imagePath = req.body.format === 'single' ? imagePath : videoPath;
+  const filePath = req.body.format === 'single' ? imagePath : videoPath;
 
   let transporter = nodemailer.createTransport({
     host: 'mail.axc.nl',
@@ -395,7 +395,7 @@ app.post('/sendPictureToEmail', (req, res) => {
     `,
     attachments: [{
         filename: req.body.format === 'single' ? 'picture.jpg' : 'video.mp4',
-        path: imagePath,
+        path: filePath,
         cid: 'unique@nodemailer.com'
     }]
   }
