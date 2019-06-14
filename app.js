@@ -394,7 +394,7 @@ app.post('/sendPictureToEmail', (req, res) => {
     </html>
     `,
     attachments: [{
-        filename: 'picture.jpg',
+        filename: req.body.format === 'single' ? 'picture.jpg' : 'video.mp4',
         path: imagePath,
         cid: 'unique@nodemailer.com'
     }]
