@@ -483,7 +483,7 @@ const uploadPictureToGooglePhotos = async (file) => {
 }
 
 function addOverlay(input, output, frame) {
-  const framePath = path.join(__dirname, 'public', 'frames', frame);
+  const framePath = `http://res.cloudinary.com/perjor/image/upload/c_scale,h_800,w_1200/${frame}`;
 
   return new Promise((resolve, reject) => {
     ffmpeg()
