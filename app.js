@@ -413,6 +413,8 @@ app.post('/sendPictureToEmail', (req, res) => {
 })
 
 // Start the server
+console.log("TCL: process.env.NODE_ENV", process.env.NODE_ENV)
+
 if (process.env.NODE_ENV === "production") {
   app.listen(config.port, () => {
     console.log(`App listening on http://localhost:${config.port}`)
@@ -430,7 +432,7 @@ if (process.env.NODE_ENV === "production") {
   };
 
   https.createServer(options, app).listen(config.port, () => {
-    console.log(`App listening on http://localhost:${config.port}`)
+    console.log(`App listening on https://localhost:${config.port}`)
     console.log('Press Ctrl+C to quit.')
   });
 }
