@@ -8,7 +8,7 @@ const gphoto2 = require('gphoto2')
 const cors = require('cors')
 const nodemailer = require('nodemailer');
 const path = require('path');
-var fs = require('fs');
+const fs = require('fs');
 const filterous = require('filterous');
 
 const imagePath = path.join(__dirname, 'public', 'images', 'picture.jpg');
@@ -413,10 +413,27 @@ app.post('/sendPictureToEmail', (req, res) => {
 })
 
 // Start the server
-app.listen(config.port, () => {
-  console.log(`App listening on http://localhost:${config.port}`)
-  console.log('Press Ctrl+C to quit.')
-});
+if (process.env.NODE_ENV === "production") {
+  app.listen(config.port, () => {
+    console.log(`App listening on http://localhost:${config.port}`)
+    console.log('Press Ctrl+C to quit.')
+  });
+} else {
+  const https = require('https');
+  
+  const options = {
+    key: fs.readFileSync(path.join(__dirname, 'server.key')),
+    cert: fs.readFileSync(path.join(__dirname, 'server.crt')),
+    passphrase: 'black',
+    requestCert: false,
+    rejectUnauthorized: false
+  };
+
+  https.createServer(options, app).listen(config.port, () => {
+    console.log(`App listening on http://localhost:${config.port}`)
+    console.log('Press Ctrl+C to quit.')
+  });
+}
 
 const uploadPictureToGooglePhotos = async (file) => {
   const filename = file.name;
