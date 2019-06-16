@@ -6,7 +6,8 @@
   "license": "MIT",
   "author": "Jordy Pereira",
   "scripts": {
-    "start": "node app.js"
+    "start": "set NODE_ENV=production && node app.js",
+    "dev": "set NODE_ENV=development && node app.js"
   },
   "repository": {
     "type": "git",
