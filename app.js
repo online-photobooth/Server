@@ -89,9 +89,6 @@ app.post('/takePicture', async (req, res) => {
     });
   }
 })
-app.get('/test', (req, res) => {
-  res.send('test')
-});
 
 app.post('/takeGif', async (req, res) => {
   const filter = req.body.filter === 'normal' ? false : req.body.filter;
@@ -416,29 +413,10 @@ app.post('/sendPictureToEmail', (req, res) => {
 })
 
 // Start the server
-console.log("TCL: process.env.NODE_ENV", process.env.NODE_ENV)
-
-if (process.env.NODE_ENV === "production") {
-  app.listen(config.port, () => {
-    console.log(`App listening on http://localhost:${config.port}`)
-    console.log('Press Ctrl+C to quit.')
-  });
-} else {
-  const https = require('https');
-  
-  const options = {
-    key: fs.readFileSync(path.join(__dirname, 'server.key')),
-    cert: fs.readFileSync(path.join(__dirname, 'server.crt')),
-    passphrase: 'black',
-    requestCert: false,
-    rejectUnauthorized: false
-  };
-
-  https.createServer(options, app).listen(config.port, () => {
-    console.log(`App listening on https://localhost:${config.port}`)
-    console.log('Press Ctrl+C to quit.')
-  });
-}
+app.listen(config.port, () => {
+  console.log(`App listening on http://localhost:${config.port}`)
+  console.log('Press Ctrl+C to quit.')
+});
 
 const uploadPictureToGooglePhotos = async (file) => {
   const filename = file.name;
