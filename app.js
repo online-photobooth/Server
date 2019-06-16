@@ -89,6 +89,9 @@ app.post('/takePicture', async (req, res) => {
     });
   }
 })
+app.get('/test', (req, res) => {
+  res.send('test')
+});
 
 app.post('/takeGif', async (req, res) => {
   const filter = req.body.filter === 'normal' ? false : req.body.filter;
