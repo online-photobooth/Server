@@ -10,16 +10,21 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
 const filterous = require('filterous');
+require('dotenv').config();
+
 
 const imagePath = path.join(__dirname, 'public', 'images', 'picture.jpg');
 const videoPath = path.join(__dirname, 'public', 'videos', 'video.mp4');
 
 // Setup video encoder
-// const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-// const ffprobePath = require('@ffprobe-installer/ffprobe').path;
 const ffmpeg = require('fluent-ffmpeg');
-// ffmpeg.setFfmpegPath(ffmpegPath);
-// ffmpeg.setFfprobePath(ffprobePath);
+
+if (process.env.ENABLE_FFMPEG) {
+  const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+  const ffprobePath = require('@ffprobe-installer/ffprobe').path;
+  ffmpeg.setFfmpegPath(ffmpegPath);
+  ffmpeg.setFfprobePath(ffprobePath);
+}
 
 const GPhoto = new gphoto2.GPhoto2();
 const app = express();
