@@ -216,7 +216,7 @@ app.post('/createGif', async (req, res) => {
 
 app.post('/uploadLastImageTaken', async (req, res) => {
   const date = Date.now();
-  const filename = `${date}_kdg-photobooth.jpg`;
+  const filename = `${date}_photobooth.jpg`;
   const image = fs.readFileSync(imagePath);
 
   logger.info(`Uploading last image taken ${filename}`);
