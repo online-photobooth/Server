@@ -64,13 +64,13 @@ app.post('/takePicture', async (req, res) => {
   logger.info(`Taking picture`);
 
   const frame = req.body.frame;
-  const filter = req.body.filter;
+  const filter = req.body.filter || false;
   const input = path.join(__dirname, 'public', 'images', 'temp.jpg');
   const output1 = path.join(__dirname, 'public', 'images', 'temp2.jpg');
 
   try {
     const picture = (req.body.image && Buffer.from(req.body.image, 'base64')) || await takePicture(input);
-    console.log("TCL: picture", picture)
+
     if(filter) {
       await filterous.importImage(picture)
       .applyInstaFilter(filter)
