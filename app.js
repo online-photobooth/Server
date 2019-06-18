@@ -96,9 +96,9 @@ app.post('/takePicture', async (req, res) => {
     
     await resizeImage(input, output1);
     await addOverlay(output1, imagePath, frame);
-    const image = fs.readFileSync(imagePath).toString('base64');
+    // const image = fs.readFileSync(imagePath);
 
-    res.status(200).send(image);
+    res.status(200).sendFile(imagePath);
   } catch (error) {
     logger.warn(error);
 
