@@ -71,10 +71,16 @@ app.post('/takePicture', async (req, res) => {
   try {
     const picture = (req.body.image && Buffer.from(req.body.image.replace(/^data:image\/webp;base64,/, ""), 'base64')) || await takePicture(input);
 
-    if(filter) {
+    if (filter) {
       await filterous.importImage(picture)
       .applyInstaFilter(filter)
       .save(input);
+    } else {
+      const base64Data = req.body.image.replace(/^data:image\/webp;base64,/, "");
+
+      fs.writeFileSync(input, base64Data, 'base64', function(err) {
+        logger.warn(err);
+      });
     }
     await resizeImage(input, output1);
     await addOverlay(output1, imagePath, frame);
@@ -163,7 +169,7 @@ app.post('/createGif', async (req, res) => {
         const base64Data = image.replace(/^data:image\/webp;base64,/, "");
 
         fs.writeFileSync(imageFolder(i), base64Data, 'base64', function(err) {
-          console.log(err);
+          logger.warn(err);
         });
       })
     }
