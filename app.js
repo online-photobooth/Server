@@ -10,6 +10,8 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
 const filterous = require('filterous');
+require('dotenv').config();
+
 
 const imagePath = path.join(__dirname, 'public', 'images', 'picture.jpg');
 const videoPath = path.join(__dirname, 'public', 'videos', 'video.mp4');
