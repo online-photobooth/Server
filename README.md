@@ -13,7 +13,9 @@ This needs to run on a Linux machine, like a raspberry pi with raspbian installe
 To use a Canon or Nikon camera your machine needs [gphoto2](https://github.com/lwille/node-gphoto2) installed, as explained in the [Node Gphoto2 repository](https://github.com/lwille/node-gphoto2).
 
 ### ffmpeg
-To make videos and add overlays, your machine needs ffmpeg and ffmpeg-probe installed.
+
+To make videos and add overlays, your machine needs ffmpeg and ffmpeg-probe installed.  
+If you machine supports [ffmpeg-installer](https://github.com/kribblo/node-ffmpeg-installer) you can add `ENABLE_FFMPEG=true` in `.env`.
 
 ### node-canvas
 To use the filters you need [node-canvas](https://github.com/Automattic/node-canvas/wiki/_pages).
