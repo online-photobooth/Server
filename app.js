@@ -69,7 +69,7 @@ app.post('/takePicture', async (req, res) => {
   const output1 = path.join(__dirname, 'public', 'images', 'temp2.jpg');
 
   try {
-    const picture = (req.body.image && Buffer.from(req.body.image, 'base64')) || await takePicture(input);
+    const picture = (req.body.image && Buffer.from(req.body.image.replace(/^data:image\/webp;base64,/, ""), 'base64')) || await takePicture(input);
 
     if(filter) {
       await filterous.importImage(picture)
