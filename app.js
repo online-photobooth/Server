@@ -78,7 +78,7 @@ app.post('/takePicture', async (req, res) => {
       });
 
       picture = fs.readFile(input, async (err, buffer) => {
-        logger.warn(err);
+        logger.warn('readError' + err);
         await filterous.importImage(buffer)
         .applyInstaFilter(filter)
         .save(input);
