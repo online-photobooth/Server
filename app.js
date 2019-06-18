@@ -39,7 +39,7 @@ GPhoto.list(function (list) {
   if (list.length === 0) {
     logger.error('No camera found!')
 
-    // process.exit()
+    return false;
   };
   camera = list[0];
   console.log('Found', camera.model);
