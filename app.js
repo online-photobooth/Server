@@ -76,27 +76,19 @@ app.post('/takePicture', async (req, res) => {
       fs.writeFileSync(input, base64Data, 'base64', function(err) {
         logger.warn(err);
       });
-
-      picture = fs.readFile(input, async (err, buffer) => {
-        console.log("TCL: buffer", buffer)
-        logger.warn('readError' + err);
-        await filterous.importImage(buffer)
-        .applyInstaFilter(filter)
-        .save(input);
-      });
-      console.log("TCL: picture", picture)
     } else {
       picture = await takePicture(input);
-    }
 
-    if (!req.body.image && filter) {
-      logger.info('Applying Filter.');
-      await filterous.importImage(picture)
-      .applyInstaFilter(filter)
-      .save(input);
-    } else if(!req.body.image) {
-      fs.writeFileSync(input, picture);
+      if (filter) {
+        logger.info('Applying Filter.');
+        await filterous.importImage(picture)
+        .applyInstaFilter(filter)
+        .save(input);
+      } else {
+        fs.writeFileSync(input, picture);
+      }
     }
+    
     await resizeImage(input, output1);
     await addOverlay(output1, imagePath, frame);
 
