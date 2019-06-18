@@ -78,6 +78,7 @@ app.post('/takePicture', async (req, res) => {
       });
 
       picture = fs.readFile(input, async (err, buffer) => {
+        console.log("TCL: buffer", buffer)
         logger.warn('readError' + err);
         await filterous.importImage(buffer)
         .applyInstaFilter(filter)
