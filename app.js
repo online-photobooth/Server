@@ -77,7 +77,8 @@ app.post('/takePicture', async (req, res) => {
         logger.warn(err);
       });
 
-      picture = fs.readFileSync(input)
+      picture = fs.readFileSync(input);
+      console.log("TCL: picture", picture)
     } else {
       picture = await takePicture(input);
     }
