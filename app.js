@@ -81,13 +81,14 @@ app.post('/takePicture', async (req, res) => {
       console.log("TCL: picture", picture)
     } else {
       picture = await takePicture(input);
-      console.log("TCL: picture", picture)
     }
 
     if (filter) {
       await filterous.importImage(picture)
       .applyInstaFilter(filter)
       .save(input);
+    } else {
+      fs.writeFileSync(input, picture);
     }
     await resizeImage(input, output1);
     await addOverlay(output1, imagePath, frame);
