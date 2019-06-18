@@ -96,10 +96,9 @@ app.post('/takePicture', async (req, res) => {
     
     await resizeImage(input, output1);
     await addOverlay(output1, imagePath, frame);
+    const image = fs.readFileSync(videoPath);
 
-    res.status(200).send({
-      message: 'Picture taken',
-    });
+    res.status(200).sendFile(image);
   } catch (error) {
     logger.warn(error);
 
@@ -205,6 +204,7 @@ app.post('/createGif', async (req, res) => {
       logger.info('Video created')
       try {
         await addOverlay(input, videoPath, frame);
+        const image = fs.readFileSync(videoPath);
 
         return res.status(200).send();
       } catch (error) {
