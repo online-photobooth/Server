@@ -70,6 +70,7 @@ app.post('/takePicture', async (req, res) => {
 
   try {
     const picture = req.body.image || await takePicture(input);
+    console.log("TCL: req.body.image", req.body.image)
     if(filter) {
       await filterous.importImage(picture)
       .applyInstaFilter(filter)
