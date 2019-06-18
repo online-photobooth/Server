@@ -81,6 +81,7 @@ app.post('/takePicture', async (req, res) => {
       console.log("TCL: picture", picture)
     } else {
       picture = await takePicture(input);
+      console.log("TCL: picture", picture)
     }
 
     if (filter) {
