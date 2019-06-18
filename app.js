@@ -174,6 +174,7 @@ app.post('/createGif', async (req, res) => {
     } else {
       req.body.images.forEach((image, i) => {
         const base64Data = image.replace(/^data:image\/webp;base64,/, "");
+        logger.info('Writing Image ' + i)
 
         fs.writeFileSync(imageFolder(i), base64Data, 'base64', function(err) {
           logger.warn(err);
