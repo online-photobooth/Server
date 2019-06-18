@@ -69,18 +69,23 @@ app.post('/takePicture', async (req, res) => {
   const output1 = path.join(__dirname, 'public', 'images', 'temp2.jpg');
 
   try {
-    const picture = (req.body.image && Buffer.from(req.body.image.replace(/^data:image\/webp;base64,/, ""), 'base64')) || await takePicture(input);
-
-    if (filter) {
-      await filterous.importImage(picture)
-      .applyInstaFilter(filter)
-      .save(input);
-    } else {
+    let picture;
+    if (req.body.image) { 
       const base64Data = req.body.image.replace(/^data:image\/webp;base64,/, "");
 
       fs.writeFileSync(input, base64Data, 'base64', function(err) {
         logger.warn(err);
       });
+
+      picture = fs.readFileSync(input)
+    } else {
+      picture = await takePicture(input);
+    }
+
+    if (filter) {
+      await filterous.importImage(picture)
+      .applyInstaFilter(filter)
+      .save(input);
     }
     await resizeImage(input, output1);
     await addOverlay(output1, imagePath, frame);
