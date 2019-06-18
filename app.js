@@ -19,7 +19,7 @@ const videoPath = path.join(__dirname, 'public', 'videos', 'video.mp4');
 // Setup video encoder
 const ffmpeg = require('fluent-ffmpeg');
 
-if (process.env.ENABLE_FFMPEG) {
+if (process.env.ENABLE_FFMPEG === true) {
   console.log("TCL: process.env.ENABLE_FFMPEG", process.env.ENABLE_FFMPEG)
   const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
   const ffprobePath = require('@ffprobe-installer/ffprobe').path;
