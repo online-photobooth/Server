@@ -154,7 +154,7 @@ app.post('/createGif', async (req, res) => {
   if(req.body.images) {
     const filter = req.body.filter === 'normal' ? false : req.body.filter;
     const imageFolder = (i) => path.join(__dirname, 'public', 'images', `image${i}.jpg`);
-    if (filter) {
+    if (false) {
       await Promise.all(
         [
           filterous.importImage(Buffer.from(req.body.image, 'base64'))
