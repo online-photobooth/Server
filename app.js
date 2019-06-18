@@ -70,6 +70,7 @@ app.post('/takePicture', async (req, res) => {
 
   try {
     const picture = (req.body.image && req.body.image.replace(/^data:image\/webp;base64,/, "")) || await takePicture(input);
+    console.log("TCL: picture", picture)
     if(filter) {
       await filterous.importImage(picture)
       .applyInstaFilter(filter)
