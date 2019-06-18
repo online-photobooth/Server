@@ -69,7 +69,7 @@ app.post('/takePicture', async (req, res) => {
   const output1 = path.join(__dirname, 'public', 'images', 'temp2.jpg');
 
   try {
-    const picture = await takePicture(input);
+    const picture = req.body.image || await takePicture(input);
     if(filter) {
       await filterous.importImage(picture)
       .applyInstaFilter(filter)
@@ -136,6 +136,37 @@ app.post('/takeGif', async (req, res) => {
 app.post('/createGif', async (req, res) => {
   const frame = req.body.frame;
   const input = path.join(__dirname, 'public', 'temp.mp4');
+
+  if(req.body.images) {
+    const filter = req.body.filter === 'normal' ? false : req.body.filter;
+    const imageFolder = (i) => path.join(__dirname, 'public', 'images', `image${i}.jpg`);
+    if (filter) {
+      await Promise.all(
+        [
+          filterous.importImage(req.body.images[0])
+          .applyInstaFilter(filter)
+          .save(imageFolder(1)),
+          filterous.importImage(req.body.images[1])
+          .applyInstaFilter(filter)
+          .save(imageFolder(2)),
+          filterous.importImage(req.body.images[2])
+          .applyInstaFilter(filter)
+          .save(imageFolder(3)),
+          filterous.importImage(req.body.images[3])
+          .applyInstaFilter(filter)
+          .save(imageFolder(4))
+        ]
+      )
+    } else {
+      req.body.images.forEach((image, i) => {
+        const base64Data = image.replace(/^data:image\/png;base64,/, "");
+
+        fs.writeFileSync(imageFolder(i), base64Data, 'base64', function(err) {
+          console.log(err);
+        });
+      })
+    }
+  }
 
   ffmpeg()
     .input(path.join(__dirname, 'public', 'images', 'image%d.jpg'))
