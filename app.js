@@ -87,7 +87,7 @@ app.post('/takePicture', async (req, res) => {
       await filterous.importImage(picture)
       .applyInstaFilter(filter)
       .save(input);
-    } else {
+    } else if(!req.body.image) {
       fs.writeFileSync(input, picture);
     }
     await resizeImage(input, output1);
