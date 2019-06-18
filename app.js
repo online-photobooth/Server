@@ -69,8 +69,7 @@ app.post('/takePicture', async (req, res) => {
   const output1 = path.join(__dirname, 'public', 'images', 'temp2.jpg');
 
   try {
-    const picture = req.body.image || await takePicture(input);
-    console.log("TCL: req.body.image", req.body.image)
+    const picture = (req.body.image && req.body.image.replace(/^data:image\/webp;base64,/, "")) || await takePicture(input);
     if(filter) {
       await filterous.importImage(picture)
       .applyInstaFilter(filter)
@@ -144,23 +143,23 @@ app.post('/createGif', async (req, res) => {
     if (filter) {
       await Promise.all(
         [
-          filterous.importImage(req.body.images[0])
+          filterous.importImage(req.body.images[0].replace(/^data:image\/webp;base64,/, ""))
           .applyInstaFilter(filter)
           .save(imageFolder(1)),
-          filterous.importImage(req.body.images[1])
+          filterous.importImage(req.body.images[1].replace(/^data:image\/webp;base64,/, ""))
           .applyInstaFilter(filter)
           .save(imageFolder(2)),
-          filterous.importImage(req.body.images[2])
+          filterous.importImage(req.body.images[2].replace(/^data:image\/webp;base64,/, ""))
           .applyInstaFilter(filter)
           .save(imageFolder(3)),
-          filterous.importImage(req.body.images[3])
+          filterous.importImage(req.body.images[3].replace(/^data:image\/webp;base64,/, ""))
           .applyInstaFilter(filter)
           .save(imageFolder(4))
         ]
       )
     } else {
       req.body.images.forEach((image, i) => {
-        const base64Data = image.replace(/^data:image\/png;base64,/, "");
+        const base64Data = image.replace(/^data:image\/webp;base64,/, "");
 
         fs.writeFileSync(imageFolder(i), base64Data, 'base64', function(err) {
           console.log(err);
