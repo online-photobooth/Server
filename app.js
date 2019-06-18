@@ -84,6 +84,7 @@ app.post('/takePicture', async (req, res) => {
     }
 
     if (filter) {
+      logger.info('Applying Filter.');
       await filterous.importImage(picture)
       .applyInstaFilter(filter)
       .save(input);
