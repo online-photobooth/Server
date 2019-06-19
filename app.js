@@ -68,7 +68,7 @@ app.use(express.static('public'));
 app.post('/takePicture', async (req, res) => {
   logger.info(`Taking picture`);
 
-  const frame = req.body.frame;
+  const frame = req.body.frame || false;
   const filter = req.body.filter || false;
   const input = path.join(__dirname, 'public', 'images', 'temp.jpg');
   const output1 = path.join(__dirname, 'public', 'images', 'temp2.jpg');
@@ -93,9 +93,14 @@ app.post('/takePicture', async (req, res) => {
         fs.writeFileSync(input, picture);
       }
     }
+
+    if (frame) {
+      await resizeImage(input, output1);
+      await addOverlay(output1, imagePath, frame);
+    } else {
+      await resizeImage(input, imagePath);
+    }
     
-    await resizeImage(input, output1);
-    await addOverlay(output1, imagePath, frame);
     const image = "data:image/png;base64," + fs.readFileSync(imagePath).toString('base64');
 
     res.status(200).send(image);
@@ -152,8 +157,8 @@ app.post('/takeGif', async (req, res) => {
 });
 
 app.post('/createGif', async (req, res) => {
-  const frame = req.body.frame;
-  const input = path.join(__dirname, 'public', 'temp.mp4');
+  const frame = req.body.frame || false;
+  const input = frame ? path.join(__dirname, 'public', 'temp.mp4') : videoPath;
 
   if(req.body.images) {
     const filter = req.body.filter === 'normal' ? false : req.body.filter;
@@ -203,7 +208,9 @@ app.post('/createGif', async (req, res) => {
     .on('end', async function() {
       logger.info('Video created')
       try {
-        await addOverlay(input, videoPath, frame);
+        if (frame) {
+          await addOverlay(input, videoPath, frame);
+        }
         const image = fs.readFileSync(videoPath);
 
         return res.status(200).send();
