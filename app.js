@@ -95,6 +95,7 @@ app.post('/takePicture', async (req, res) => {
     }
 
     if (frame) {
+      console.log("TCL: frame", frame)
       await resizeImage(input, output1);
       await addOverlay(output1, imagePath, frame);
     } else {
